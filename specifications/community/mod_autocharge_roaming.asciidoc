@@ -1,5 +1,3 @@
-= Autocharge Roaming with OPRF
-:toc: left
 :numbered:
 
 [WARNING]
@@ -123,9 +121,9 @@ This flow establishes the link between a vehicle (MAC) and a User Account when n
 . *Failure:* The check fails (VID not found), confirming this vehicle is not yet authorized for Autocharge.
 . *Manual Auth:* The user authenticates manually using an RFID card or App.
 . *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
-. *Binding Request:* The CPO sends the tuple `{VID, Token UID, Session ID}` to the authorizing eMSP (`POST /vehicles`).
+. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
 . *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `{VID, Token UID}` entry to all CPOs in the network, making it available for future roaming.
+. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
 ==== 5.1.2. Binding After Regular Charge
 
@@ -139,9 +137,9 @@ This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting au
 . *If the eMSP is `AUTO_CHARGE_CAPABLE`:*
 .. *Query the concerned eMSP:* The CPO queries the eMSP responsible for the current charge using this *Blinded MAC* (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
 .. *Evaluation:* The eMSP responds with the evaluated element (blind signature).
-.. *Binding Request:* The CPO sends the tuple `{VID, Token UID, Session ID}` to the authorizing eMSP (`POST /vehicles`).
+.. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
 .. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-.. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `{VID, Token UID}` entry to all CPOs in the network, making it available for future roaming.
+.. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
 === 5.2. Phase 2: Authorization (Session Start)
 
@@ -169,7 +167,7 @@ Revocation can be triggered by the User or the eMSP.
 
 . User requests disablement via eMSP App, or eMSP disables Autocharge unilaterally.
 . eMSP updates status to `REVOKED`.
-. eMSP sends `PUT /vehicles/{vid}` to relevant CPOs (push) or CPO updates via periodic polling.
+. eMSP sends `PUT /vehicles/+{vid}+` to relevant CPOs (push) or CPO updates via periodic polling.
 . Subsequent Auth requests for this VID *MUST* return `INVALID`.
 
 == 6. OCPI Extension: Vehicles Module
