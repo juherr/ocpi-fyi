@@ -4,6 +4,8 @@ Multi-version Antora documentation site for OCPI specifications.
 
 This repository mirrors official OCPI release branches into versioned folders under `specifications/`, keeps upstream Git history, and publishes a single documentation website with version switching.
 
+> **Disclaimer:** This is an unofficial, independent documentation site. It is not affiliated with or endorsed by the [EVRoaming Foundation](https://www.evroaming.org/).
+
 ## Goals
 
 - Import OCPI versions from `https://github.com/ocpi/ocpi`
