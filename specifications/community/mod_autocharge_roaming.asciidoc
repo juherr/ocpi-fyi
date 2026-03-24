@@ -145,7 +145,7 @@ sequenceDiagram
     CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
     eMSP->>eMSP: Validate binding (session + token check)
     eMSP-->>CPO: AUTO_CHARGE_GRANTED
-    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
+    eMSP->>CPOs: PUT /vehicles/{vehicle_id} (push VID to all CPOs)
 </pre>
 ++++
 
@@ -185,7 +185,7 @@ sequenceDiagram
     CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
     eMSP->>eMSP: Validate binding (session + token check)
     eMSP-->>CPO: AUTO_CHARGE_GRANTED
-    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
+    eMSP->>CPOs: PUT /vehicles/{vehicle_id} (push VID to all CPOs)
 </pre>
 ++++
 
@@ -238,15 +238,15 @@ sequenceDiagram
 
 *Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
 
-*Conflict resolution:* it might happen that the user is erroneously enrolled with multiple eMSPs at the same time. When this happens, CPOs should send the `Authorize` request to all concerned eMSPs. In case of multiple validations, the CPO *MUST* choose one eMSP and start the charge with it, and notify the other ones of the conflict.
+*Conflict resolution:* it might happen that the user is erroneously enrolled with multiple eMSPs at the same time. For example, a user might charge using two different eMSPs, then activate Autocharge on both. When this happens, CPOs should send the `Authorize` request to all concerned eMSPs. In case of multiple validations, the CPO *MUST* choose one eMSP and start the charge with it, and notify the other ones of the conflict.
 
 === 5.3. Phase 3: Revocation
 
 Revocation can be triggered by the User or the eMSP.
 
 . User requests disablement via eMSP App, or eMSP disables Autocharge unilaterally.
-. eMSP updates status to `REVOKED`.
-. eMSP sends `PUT /vehicles/+{vid}+` to relevant CPOs (push) or CPO updates via periodic polling.
+. eMSP updates status to `AUTO_CHARGE_REVOKED`.
+. eMSP sends `PUT /vehicles/+{vehicle_id}+` to relevant CPOs (push) or CPO updates via periodic polling.
 . Subsequent Auth requests for this VID *MUST* return `INVALID`.
 
 == 6. OCPI Extension: Vehicles Module
@@ -282,7 +282,7 @@ This specification adds a module `/vehicles` to the OCPI standard.
 
 | `auto_charge_status`
 | <<AutoChargeStatus>>
-| no (default: AUTO_CHARGE_REVOKED)
+| no (default: `AUTO_CHARGE_REVOKED`)
 | Set to `AUTO_CHARGE_GRANTED` if the autocharge feature has been accepted by the end user. By default, when creating, it should be set to `AUTO_CHARGE_REVOKED` until the user accepts. If the user does not wish to be onboarded, the eMSP can set this value to `AUTO_CHARGE_DO_NOT_ASK`.
 
 | `date_created`
@@ -318,6 +318,7 @@ The last change made from the end user prevails. If the last update is an author
 
 * The `date_revoked` *MUST* be updated to current date and time.
 * The `auto_charge_status` enumeration *MUST* be set to `AUTO_CHARGE_REVOKED`.
+* The `date_authorized` property is *not* modified.
 
 *When end user does not wish to be asked again for the autocharge feature:*
 
@@ -600,18 +601,19 @@ https://www.server.com/ocpi/emsp/2.2/oprf/sign
 | Property | Type | Card. | Description
 
 | `blinded_element`
-| string
+| xref:types.adoc#types_string_type[string]
 | 1
-| The blinded MAC address encoded as a hexadecimal string representing a point on the elliptic curve (P-256).
+| The blinded MAC address encoded as a hexadecimal string representing a point on the elliptic curve (`P-256`).
 |===
 
 *Response Data:*
 
-[cols="2,1,4",options="header"]
+[cols="2,2,1,4",options="header"]
 |===
-| Type | Card. | Description
+| Property | Type | Card. | Description
 
 | `evaluated_element`
+| xref:types.adoc#types_string_type[string]
 | 1
 | The result of the scalar multiplication of the `blinded_element` by the eMSP's private key, encoded as a hexadecimal string.
 |===
