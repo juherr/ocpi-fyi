@@ -1,8 +1,13 @@
 [WARNING]
 ====
 This is an *unofficial community extension*, not part of the official OCPI specification.
-It is authored by H. Ebabil (Chargemap), A. Pinto (Powerdot), T. Franquelin (Electra) — version 0.1 (2026-03-20).
 ====
+
+[cols="1,3", frame=none, grid=none]
+|===
+| *Authors*  | H. Ebabil (Chargemap), A. Pinto (Powerdot), T. Franquelin (Electra)
+| *Version*  | 0.1 (2026-03-20)
+|===
 
 == Abstract
 
