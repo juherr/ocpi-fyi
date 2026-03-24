@@ -47,7 +47,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 == 3. Solution Overview
 
-=== How It Works
+=== 3.1. How It Works
 
 This protocol uses *OPRF (Oblivious Pseudorandom Functions)* to enable privacy-preserving Autocharge across multiple charging networks:
 
@@ -55,7 +55,7 @@ This protocol uses *OPRF (Oblivious Pseudorandom Functions)* to enable privacy-p
 . *Discovery:* Each eMSP evaluates the blinded identifier with its private key and returns a response. The CPO unblinds these to check if the vehicle is recognized.
 . *Authorization:* If matched, charging starts automatically. If not, the user authenticates manually (RFID/App), and the eMSP registers the vehicle for future sessions.
 
-=== Why OPRF?
+=== 3.2. Why OPRF?
 
 OPRF ensures that *MAC addresses are never shared in plaintext*, protecting user privacy while maintaining the decentralized architecture of OCPI. Each eMSP independently manages its own keys and vehicle registrations. No central authority is needed.
 
@@ -65,8 +65,9 @@ OPRF ensures that *MAC addresses are never shared in plaintext*, protecting user
 
 This specification relies exclusively on the *Oblivious Pseudorandom Function (OPRF)* primitive as defined in RFC 9497. The OPRF is used to compute a deterministic, pseudorandom identifier (the VID) from a MAC address, such that the CPO learns only the output while the eMSP's private key remains confidential.
 
-No symmetric encryption (AEAD) or key derivation function (KDF) is mandated at the OPRF layer; confidentiality and integrity of the transport are delegated to the OCPI transport layer (TLS). See <<_4_2_oprf_suite_selection>> for the specific OPRF suite, curve parameters, and hash function required by this specification.
+No symmetric encryption (AEAD) or key derivation function (KDF) is mandated at the OPRF layer; confidentiality and integrity of the transport are delegated to the OCPI transport layer (TLS). See <<autocharge_oprf_suite>> for the specific OPRF suite, curve parameters, and hash function required by this specification.
 
+[[autocharge_oprf_suite]]
 === 4.2. OPRF Suite Selection
 
 To ensure maximum interoperability across diverse hardware and software environments, all implementations *MUST* utilize the following Oblivious Pseudorandom Function (OPRF) suite as defined in RFC 9497:
