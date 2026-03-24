@@ -122,17 +122,6 @@ This flow establishes the link between a vehicle (MAC) and a User Account when n
 
 *Prerequisite:* The vehicle is plugged in. The CPO has captured the MAC address.
 
-. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
-. *Broadcast Query:* The CPO broadcasts this *Blinded MAC* to all available eMSPs (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
-. *Evaluation:* The eMSPs respond with the evaluated element (blind signature).
-. *Local Check:* The CPO unblinds the response to get the VID (Hashed MAC). It checks this VID against its local database.
-. *Failure:* The check fails (VID not found), confirming this vehicle is not yet authorized for Autocharge.
-. *Manual Auth:* The user authenticates manually using an RFID card or App.
-. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
-. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
-. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
-
 .Phase 1a — Binding before regular charge
 ++++
 <pre class="mermaid">
@@ -160,21 +149,22 @@ sequenceDiagram
 </pre>
 ++++
 
+. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
+. *Broadcast Query:* The CPO broadcasts this *Blinded MAC* to all available eMSPs (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
+. *Evaluation:* The eMSPs respond with the evaluated element (blind signature).
+. *Local Check:* The CPO unblinds the response to get the VID (Hashed MAC). It checks this VID against its local database.
+. *Failure:* The check fails (VID not found), confirming this vehicle is not yet authorized for Autocharge.
+. *Manual Auth:* The user authenticates manually using an RFID card or App.
+. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
+. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
+. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
+. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+
 ==== 5.1.2. Binding After Regular Charge
 
 This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting autocharge roaming (`AUTO_CHARGE_CAPABLE`). This establishes the link between a User Account and a vehicle (VID) following a successful regular charge start.
 
 *Prerequisite:* The vehicle is not plugged in before starting the charge.
-
-. *Manual Auth:* The user authenticates manually using an RFID card or App.
-. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
-. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
-. *If the eMSP is `AUTO_CHARGE_CAPABLE`:*
-.. *Query the concerned eMSP:* The CPO queries the eMSP responsible for the current charge using this *Blinded MAC* (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
-.. *Evaluation:* The eMSP responds with the evaluated element (blind signature).
-.. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
-.. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-.. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
 .Phase 1b — Binding after regular charge
 ++++
@@ -199,21 +189,19 @@ sequenceDiagram
 </pre>
 ++++
 
+. *Manual Auth:* The user authenticates manually using an RFID card or App.
+. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
+. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
+. *If the eMSP is `AUTO_CHARGE_CAPABLE`:*
+.. *Query the concerned eMSP:* The CPO queries the eMSP responsible for the current charge using this *Blinded MAC* (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
+.. *Evaluation:* The eMSP responds with the evaluated element (blind signature).
+.. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
+.. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
+.. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+
 === 5.2. Phase 2: Authorization (Session Start)
 
 This flow describes the standard Autocharge experience where the user is already enrolled.
-
-. *Blind MAC:* The CPO gets the MAC address from the charger and applies the OPRF random blinding factor.
-. *Broadcast Query:* The CPO broadcasts the *Blinded MAC* to connected eMSPs (`POST /oprf/sign`).
-. *Local Lookup:*
-** eMSPs return the blind signatures (Evaluated Element).
-** CPO unblinds the signatures to obtain the VID.
-** CPO checks its local whitelist database for this VID and finds a match (retrieving the associated *Token UID* and *eMSP ID*).
-. *Authorization:* The CPO sends a standard OCPI `Authorize` request to the identified eMSP with:
-** `token_uid`: The VID (Hashed MAC)
-** `type`: `VEHICLE_HASHED_MAC_IDENTIFIER` (New Enum)
-. *Verification:* The eMSP performs Contextual Verification.
-. *Charge Start:* The charge starts upon success (`AuthorizationInfo: ALLOWED`).
 
 .Phase 2 — Authorization (session start)
 ++++
@@ -235,6 +223,18 @@ sequenceDiagram
     Note over CPO: Charge starts
 </pre>
 ++++
+
+. *Blind MAC:* The CPO gets the MAC address from the charger and applies the OPRF random blinding factor.
+. *Broadcast Query:* The CPO broadcasts the *Blinded MAC* to connected eMSPs (`POST /oprf/sign`).
+. *Local Lookup:*
+** eMSPs return the blind signatures (Evaluated Element).
+** CPO unblinds the signatures to obtain the VID.
+** CPO checks its local whitelist database for this VID and finds a match (retrieving the associated *Token UID* and *eMSP ID*).
+. *Authorization:* The CPO sends a standard OCPI `Authorize` request to the identified eMSP with:
+** `token_uid`: The VID (Hashed MAC)
+** `type`: `VEHICLE_HASHED_MAC_IDENTIFIER` (New Enum)
+. *Verification:* The eMSP performs Contextual Verification.
+. *Charge Start:* The charge starts upon success (`AuthorizationInfo: ALLOWED`).
 
 *Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
 
