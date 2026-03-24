@@ -128,6 +128,8 @@ nav:
       `= OCPI Specifications
 
 This site publishes OCPI specifications and related assets.
+
+WARNING: This is an unofficial, independent documentation site. It is not affiliated with or endorsed by the link:https://www.evroaming.org/[EVRoaming Foundation].
 `
     );
   }

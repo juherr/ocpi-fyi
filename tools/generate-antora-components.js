@@ -1086,6 +1086,8 @@ function deprecatedNotice(version) {
 function aboutPageContent() {
   return `= About
 
+WARNING: This is an unofficial, independent documentation site. It is not affiliated with or endorsed by the link:https://www.evroaming.org/[EVRoaming Foundation].
+
 This site is maintained by Julien Herr.
 
 * Website: https://juherr.dev/
