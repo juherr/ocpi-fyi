@@ -281,7 +281,7 @@ This specification adds a module `/vehicles` to the OCPI standard.
 | Contract ID of the user in the eMSP system, used later for CDRs.
 
 | `auto_charge_status`
-| <<AutoChargeStatus>>
+| <<AutoChargeStatus,AutoChargeStatus>>
 | no (default: `AUTO_CHARGE_REVOKED`)
 | Set to `AUTO_CHARGE_GRANTED` if the autocharge feature has been accepted by the end user. By default, when creating, it should be set to `AUTO_CHARGE_REVOKED` until the user accepts. If the user does not wish to be onboarded, the eMSP can set this value to `AUTO_CHARGE_DO_NOT_ASK`.
 
@@ -389,7 +389,7 @@ https://www.server.com/ocpi/cpo/2.2/vehicles/ABC123HASHED
 |===
 | Type | Card. | Description
 
-| <<Vehicle>>
+| <<Vehicle,Vehicle>>
 | 1
 | The updated Vehicle object reflecting the changes.
 |===
@@ -458,7 +458,7 @@ https://ocpi.server.com/2.2/vehicles/?date_from=2025-10-01T12:00:00Z
 |===
 | Type | Card. | Description
 
-| <<Vehicle,Vehicle Object>>
+| <<Vehicle,Vehicle>>
 | *
 | List of all the VID / user pairings.
 |===
@@ -506,7 +506,7 @@ https://www.server.com/ocpi/emsp/2.2/vehicles
 |===
 | Type | Card. | Description
 
-| <<Vehicle>>
+| <<Vehicle,Vehicle>>
 | 1
 | The Vehicle object containing the registered vehicle details and status.
 |===
