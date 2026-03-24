@@ -342,8 +342,20 @@ The last change made from the end user prevails. If the last update is an author
 
 === 6.2. Interface and Endpoints — Receiver Interface (CPO)
 
-These endpoints are implemented by the *CPO*.
+Typically implemented by market roles like: CPO.
 
+[cols="2,12",options="header"]
+|===
+|Method |Description
+
+|GET |n/a
+|POST |n/a
+|<<autocharge_cpo_put_method,PUT>> |Push new/updated Vehicle record to the CPO.
+|PATCH |n/a
+|DELETE |n/a
+|===
+
+[[autocharge_cpo_put_method]]
 ==== PUT Method
 
 The PUT method is used by the eMSP to notify CPOs of any new or updated vehicle records.
@@ -383,8 +395,22 @@ https://www.server.com/ocpi/cpo/2.2/vehicles/ABC123HASHED
 
 === 6.3. Interface and Endpoints — Sender Interface (eMSP)
 
-These endpoints are implemented by the *eMSP*.
+Typically implemented by market roles like: eMSP.
 
+[cols="2,12",options="header"]
+|===
+|Method |Description
+
+|<<autocharge_emsp_get_method,GET>> |Retrieve Vehicle records (VID/user pairings), paginated by `last_updated`.
+|<<autocharge_emsp_post_register,POST /vehicles>> |Register a new vehicle identifier (VID) linked to a user token.
+|<<autocharge_emsp_post_conflict,POST /vehicles/conflict>> |Notify the eMSP of a conflicting VID detected across multiple eMSPs.
+|<<autocharge_emsp_post_oprf,POST /oprf/sign>> |Request an OPRF blind signature from the eMSP for MAC address hashing.
+|PUT |n/a
+|PATCH |n/a
+|DELETE |n/a
+|===
+
+[[autocharge_emsp_get_method]]
 ==== GET Method
 
 *Endpoint:*
@@ -436,6 +462,7 @@ https://ocpi.server.com/2.2/vehicles/?date_from=2025-10-01T12:00:00Z
 | List of all the VID / user pairings.
 |===
 
+[[autocharge_emsp_post_register]]
 ==== POST Method — Register Vehicle
 
 The POST method is used by the CPO to push a new hashed vehicle ID to the eMSP based on a Token UID.
@@ -503,6 +530,7 @@ https://www.server.com/ocpi/emsp/2.2/vehicles
 }
 ----
 
+[[autocharge_emsp_post_conflict]]
 ==== POST Method — Conflict Notification
 
 The POST method is used by the CPO to notify the eMSP that a specific hashed vehicle ID is in conflict. This status indicates that an autocharge configuration for this vehicle has been detected in another eMSP environment. The receiving eMSP *SHOULD* then take action to notify the user of the anomaly and prompt for correction.
@@ -550,6 +578,7 @@ https://www.server.com/ocpi/emsp/2.2/vehicles/conflict
 | Optional confirmation message (e.g. "Conflict notification processed").
 |===
 
+[[autocharge_emsp_post_oprf]]
 ==== POST Method — OPRF Sign
 
 The POST method is used by the CPO to request a blind signature from the eMSP. The CPO sends a blinded element (representing the MAC address), and the eMSP returns the evaluated element (signed with its private key) without ever seeing the raw MAC address.
