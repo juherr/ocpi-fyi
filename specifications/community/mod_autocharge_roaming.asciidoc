@@ -603,7 +603,7 @@ https://www.server.com/ocpi/emsp/2.2/oprf/sign
 | `blinded_element`
 | xref:types.adoc#types_string_type[string]
 | 1
-| The blinded MAC address encoded as a hexadecimal string representing a point on the elliptic curve (`P-256`).
+| The blinded MAC address encoded as a hexadecimal string representing a SEC1-encoded point on the `P-256` curve. The eMSP *MUST* validate the encoding before use: verify it is a valid SEC1 point, reject the point-at-infinity, and confirm the point lies on the `P-256` curve. Invalid encodings *MUST* be rejected (terminate processing and return an error).
 |===
 
 *Response Data:*
@@ -615,7 +615,7 @@ https://www.server.com/ocpi/emsp/2.2/oprf/sign
 | `evaluated_element`
 | xref:types.adoc#types_string_type[string]
 | 1
-| The result of the scalar multiplication of the `blinded_element` by the eMSP's private key, encoded as a hexadecimal string.
+| The result of the scalar multiplication of the `blinded_element` by the eMSP's private key, encoded as a hexadecimal string representing a SEC1-encoded point on the `P-256` curve. The CPO *MUST* validate the encoding before use: verify it is a valid SEC1 point, reject the point-at-infinity, and confirm the point lies on the `P-256` curve. Invalid encodings *MUST* be rejected (terminate processing and return an error).
 |===
 
 *Example Request:*
