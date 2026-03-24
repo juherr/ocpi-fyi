@@ -688,7 +688,7 @@ A new value *MUST* be added in the OCPI `TokenType` enumeration to characterise 
 
 === 8.1. Rate Limiting & Anomaly Detection
 
-The eMSP `/oprf/sign` endpoint must support rate limiting and anomaly detection to prevent a bad actor from creating rainbow tables.
+The eMSP `/oprf/sign` endpoint *MUST* support rate limiting and anomaly detection to prevent a bad actor from creating rainbow tables.
 
 === 8.2. Privacy
 
