@@ -252,6 +252,7 @@ Revocation can be triggered by the User or the eMSP.
 
 This specification adds a module `/vehicles` to the OCPI standard.
 
+[[Vehicle]]
 === 6.1. Data Model: Vehicle Object
 
 [cols="3,2,1,5",options="header"]
@@ -259,47 +260,47 @@ This specification adds a module `/vehicles` to the OCPI standard.
 | Property | Type | Optional | Description
 
 | `country_code`
-| CiString(2)
+| xref:types.adoc#types_cistring_type[CiString](2)
 | no
 | ISO-3166 alpha-2 country code of the eMSP that owns this object (as in OCPI Token).
 
 | `party_id`
-| CiString(3)
+| xref:types.adoc#types_cistring_type[CiString](3)
 | no
 | EVSE Operator or eMSP identifier of the party that owns this object, following OCPI conventions.
 
 | `vehicle_id`
-| String
+| xref:types.adoc#types_string_type[string]
 | no
 | Corresponding to hashed MAC address.
 
 | `contract_id`
-| String
+| xref:types.adoc#types_string_type[string]
 | no
 | Contract ID of the user in the eMSP system, used later for CDRs.
 
 | `auto_charge_status`
-| AutoChargeStatus
+| <<AutoChargeStatus>>
 | no (default: AUTO_CHARGE_REVOKED)
 | Set to `AUTO_CHARGE_GRANTED` if the autocharge feature has been accepted by the end user. By default, when creating, it should be set to `AUTO_CHARGE_REVOKED` until the user accepts. If the user does not wish to be onboarded, the eMSP can set this value to `AUTO_CHARGE_DO_NOT_ASK`.
 
 | `date_created`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | no
 | Date and time when the hashed vehicle ID has been sent from the CPO to the eMSP. If the hashed vehicle ID has been sent multiple times, the first date is stored in this field.
 
 | `date_authorized`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | yes
 | Date and time when the eMSP end user has authorized the autocharge feature request. If the user has authorized the authorization multiple times, the first date is stored in this field.
 
 | `date_revoked`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | yes
 | Date and time when the eMSP end user has revoked the autocharge feature request. If the user has revoked the authorization multiple times, the last date is stored in this field.
 
 | `last_updated`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | no
 | The greatest of `date_created`, `date_authorized` and `date_revoked`, used to paginate.
 |===
@@ -363,7 +364,7 @@ https://www.server.com/ocpi/cpo/2.2/vehicles/ABC123HASHED
 | Parameter | Datatype | Required | Description
 
 | `vehicle_id`
-| string
+| xref:types.adoc#types_string_type[string]
 | yes
 | The hashed vehicle ID for which the status is being updated.
 |===
@@ -374,7 +375,7 @@ https://www.server.com/ocpi/cpo/2.2/vehicles/ABC123HASHED
 |===
 | Type | Card. | Description
 
-| Vehicle
+| <<Vehicle>>
 | 1
 | The updated Vehicle object reflecting the changes.
 |===
@@ -413,12 +414,12 @@ https://ocpi.server.com/2.2/vehicles/?date_from=2025-10-01T12:00:00Z
 | Maximum number of objects to GET.
 
 | `date_from`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | no
 | Only return objects that have `last_updated` after or equal to this Date/Time (inclusive).
 
 | `date_to`
-| DateTime
+| xref:types.adoc#types_datetime_type[DateTime]
 | no
 | Only return objects that have `last_updated` up to this Date/Time, but not including (exclusive).
 |===
@@ -429,7 +430,7 @@ https://ocpi.server.com/2.2/vehicles/?date_from=2025-10-01T12:00:00Z
 |===
 | Type | Card. | Description
 
-| Vehicle Object
+| <<Vehicle,Vehicle Object>>
 | *
 | List of all the VID / user pairings.
 |===
@@ -455,17 +456,17 @@ https://www.server.com/ocpi/emsp/2.2/vehicles
 | Property | Type | Card. | Description
 
 | `vehicle_id`
-| string
+| xref:types.adoc#types_string_type[string]
 | 1
 | The hashed vehicle ID to be registered.
 
 | `token_uid`
-| CiString(36)
+| xref:types.adoc#types_cistring_type[CiString](36)
 | 1
 | The unique Token UID used to identify the user and authorize the auto-charge association (matches `uid` in the Token module).
 
 | `session_id`
-| string
+| xref:types.adoc#types_string_type[string]
 | 1
 | The id of the session from which the pairing originates.
 |===
@@ -476,7 +477,7 @@ https://www.server.com/ocpi/emsp/2.2/vehicles
 |===
 | Type | Card. | Description
 
-| Vehicle
+| <<Vehicle>>
 | 1
 | The Vehicle object containing the registered vehicle details and status.
 |===
@@ -522,17 +523,17 @@ https://www.server.com/ocpi/emsp/2.2/vehicles/conflict
 | Property | Type | Card. | Description
 
 | `vehicle_id`
-| string
+| xref:types.adoc#types_string_type[string]
 | 1
 | The hashed vehicle ID for which the conflict was detected.
 
 | `contract_id`
-| string
+| xref:types.adoc#types_string_type[string]
 | 1
 | Contract ID of the user in the eMSP system.
 
 | `message`
-| DisplayText
+| xref:types.adoc#types_displaytext_class[DisplayText]
 | ?
 | Optional human-readable message describing the conflict (e.g., "Vehicle registered with another MSP").
 |===
