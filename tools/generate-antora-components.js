@@ -521,6 +521,10 @@ function getUpstreamEditUrl(version, fileName) {
   return `https://github.com/ocpi/ocpi/blob/${branch}/${fileName}`
 }
 
+function getCommunityEditUrl(fileName) {
+  return `https://github.com/juherr/ocpi-fyi/blob/main/specifications/community/${fileName}`
+}
+
 function parseCsv(content) {
   const rows = []
   let row = []
@@ -1395,11 +1399,13 @@ include::partial$src/${partialName}[]
       const wrapperName = toAdocName(fileName)
       const wrapperPath = path.join(extensionsPagesDir, wrapperName)
       const title = titleFromFilename(fileName)
+      const editUrl = getCommunityEditUrl(fileName)
 
       writeFile(
         wrapperPath,
         `= ${title}
 :page-community-extension: true
+:page-upstream-edit-url: ${editUrl}
 
 include::partial$src/community/${wrapperName}[]
 `
