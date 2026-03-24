@@ -125,6 +125,33 @@ This flow establishes the link between a vehicle (MAC) and a User Account when n
 . *Validation:* The eMSP validates the binding request (checking the session and token are valid).
 . *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
+.Phase 1a — Binding before regular charge
+++++
+<pre class="mermaid">
+sequenceDiagram
+    actor User as EV Driver
+    participant CPO as CPO System
+    participant eMSPs as eMSPs (broadcast)
+    participant eMSP as Authorizing eMSP
+
+    Note over CPO: Vehicle plugs in — MAC address captured
+    CPO->>CPO: Blind MAC address (OPRF)
+    CPO->>eMSPs: POST /oprf/sign (blinded MAC)
+    eMSPs-->>CPO: Evaluated elements (blind signatures)
+    CPO->>CPO: Unblind responses → compute VID
+    CPO->>CPO: Check VID in local DB → not found
+    Note over User,CPO: Manual authentication required
+    User->>CPO: Authenticate (RFID / App)
+    CPO->>eMSP: Token authorization request
+    eMSP-->>CPO: Token valid → session authorized
+    Note over CPO: Charge starts
+    CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
+    eMSP->>eMSP: Validate binding (session + token check)
+    eMSP-->>CPO: AUTOCHARGE_GRANTED
+    eMSP->>eMSPs: PUT /vehicles/{vid} (push VID to all CPOs)
+</pre>
+++++
+
 ==== 5.1.2. Binding After Regular Charge
 
 This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting autocharge roaming (`AUTO_CHARGE_CAPABLE`). This establishes the link between a User Account and a vehicle (VID) following a successful regular charge start.
@@ -141,6 +168,29 @@ This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting au
 .. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
 .. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
+.Phase 1b — Binding after regular charge
+++++
+<pre class="mermaid">
+sequenceDiagram
+    actor User as EV Driver
+    participant CPO as CPO System
+    participant eMSP as Authorizing eMSP (AUTO_CHARGE_CAPABLE)
+
+    User->>CPO: Authenticate (RFID / App)
+    CPO->>eMSP: Token authorization request
+    eMSP-->>CPO: Token valid → session authorized
+    Note over CPO: Charge starts
+    CPO->>CPO: Capture MAC, blind it (OPRF)
+    CPO->>eMSP: POST /oprf/sign (blinded MAC)
+    eMSP-->>CPO: Evaluated element (blind signature)
+    CPO->>CPO: Unblind → compute VID
+    CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
+    eMSP->>eMSP: Validate binding (session + token check)
+    eMSP-->>CPO: AUTOCHARGE_GRANTED
+    eMSP->>eMSPs: PUT /vehicles/{vid} (push VID to all CPOs)
+</pre>
+++++
+
 === 5.2. Phase 2: Authorization (Session Start)
 
 This flow describes the standard Autocharge experience where the user is already enrolled.
@@ -156,6 +206,27 @@ This flow describes the standard Autocharge experience where the user is already
 ** `type`: `VEHICLE_HASHED_MAC_IDENTIFIER` (New Enum)
 . *Verification:* The eMSP performs Contextual Verification.
 . *Charge Start:* The charge starts upon success (`AuthorizationInfo: ALLOWED`).
+
+.Phase 2 — Authorization (session start)
+++++
+<pre class="mermaid">
+sequenceDiagram
+    participant CPO as CPO System
+    participant eMSPs as eMSPs (broadcast)
+    participant eMSP as Identified eMSP
+
+    Note over CPO: Vehicle plugs in — MAC address captured
+    CPO->>CPO: Blind MAC address (OPRF)
+    CPO->>eMSPs: POST /oprf/sign (blinded MAC)
+    eMSPs-->>CPO: Evaluated elements
+    CPO->>CPO: Unblind → compute VID
+    CPO->>CPO: Check whitelist → VID found (Token UID + eMSP ID)
+    CPO->>eMSP: POST /authorize (token_uid=VID, type=VEHICLE_HASHED_MAC_IDENTIFIER)
+    eMSP->>eMSP: Contextual Verification
+    eMSP-->>CPO: AuthorizationInfo: ALLOWED
+    Note over CPO: Charge starts
+</pre>
+++++
 
 *Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed_time: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
 
