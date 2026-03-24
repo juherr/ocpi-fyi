@@ -1,5 +1,3 @@
-:numbered:
-
 [WARNING]
 ====
 This is an *unofficial community extension*, not part of the official OCPI specification.
@@ -59,6 +57,10 @@ OPRF ensures that *MAC addresses are never shared in plaintext*, protecting user
 == 4. Security Specification
 
 === 4.1. Cryptographic Primitive
+
+This specification relies exclusively on the *Oblivious Pseudorandom Function (OPRF)* primitive as defined in RFC 9497. The OPRF is used to compute a deterministic, pseudorandom identifier (the VID) from a MAC address, such that the CPO learns only the output while the eMSP's private key remains confidential.
+
+No symmetric encryption (AEAD) or key derivation function (KDF) is mandated at the OPRF layer; confidentiality and integrity of the transport are delegated to the OCPI transport layer (TLS). See <<_4_2_oprf_suite_selection>> for the specific OPRF suite, curve parameters, and hash function required by this specification.
 
 === 4.2. OPRF Suite Selection
 
@@ -123,7 +125,7 @@ This flow establishes the link between a vehicle (MAC) and a User Account when n
 . *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
 . *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
 . *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
 .Phase 1a — Binding before regular charge
 ++++
@@ -147,8 +149,8 @@ sequenceDiagram
     Note over CPO: Charge starts
     CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
     eMSP->>eMSP: Validate binding (session + token check)
-    eMSP-->>CPO: AUTOCHARGE_GRANTED
-    eMSP->>eMSPs: PUT /vehicles/{vid} (push VID to all CPOs)
+    eMSP-->>CPO: AUTO_CHARGE_GRANTED
+    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
 </pre>
 ++++
 
@@ -166,7 +168,7 @@ This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting au
 .. *Evaluation:* The eMSP responds with the evaluated element (blind signature).
 .. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
 .. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
-.. *Propagation:* The eMSP confirms the link (`AUTOCHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+.. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
 
 .Phase 1b — Binding after regular charge
 ++++
@@ -186,8 +188,8 @@ sequenceDiagram
     CPO->>CPO: Unblind → compute VID
     CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
     eMSP->>eMSP: Validate binding (session + token check)
-    eMSP-->>CPO: AUTOCHARGE_GRANTED
-    eMSP->>eMSPs: PUT /vehicles/{vid} (push VID to all CPOs)
+    eMSP-->>CPO: AUTO_CHARGE_GRANTED
+    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
 </pre>
 ++++
 
@@ -228,7 +230,7 @@ sequenceDiagram
 </pre>
 ++++
 
-*Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed_time: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
+*Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
 
 *Conflict resolution:* it might happen that the user is erroneously enrolled with multiple eMSPs at the same time. When this happens, CPOs should send the `Authorize` request to all concerned eMSPs. In case of multiple validations, the CPO *MUST* choose one eMSP and start the charge with it, and notify the other ones of the conflict.
 
@@ -652,4 +654,4 @@ The eMSP `/oprf/sign` endpoint must support rate limiting and anomaly detection 
 
 === 8.2. Privacy
 
-Raw MAC addresses *MUST NOT* be logged in persistent storage or cache by the CPO or transmitted via OCPI. Only the HMAC digest is permitted for storage and inter-party communication.
+Raw MAC addresses *MUST NOT* be logged in persistent storage or cache by the CPO or transmitted via OCPI. Only the VID (OPRF output) is permitted for storage and inter-party communication.

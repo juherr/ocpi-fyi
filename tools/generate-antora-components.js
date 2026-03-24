@@ -336,7 +336,7 @@ function listRootDocFiles(sourceDir) {
 
 function listCommunityDocFiles() {
   const communityDir = path.join(SPECIFICATIONS_DIR, 'community')
-  if (!fs.existsSync(communityDir)) return []
+  if (!fileExists(communityDir)) return []
   return fs
     .readdirSync(communityDir, { withFileTypes: true })
     .filter(
