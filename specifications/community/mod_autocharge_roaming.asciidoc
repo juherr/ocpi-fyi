@@ -77,9 +77,9 @@ To ensure maximum interoperability across diverse hardware and software environm
 
 This suite comprises the following primitives:
 
-* *Group:* P-256 (also known as secp256r1 or prime256v1).
-* *Hash Function:* SHA-256.
-* *Hash-to-Group:* SSWU (Simplified Shallue-van de Woestijne-Ulas) method, compliant with https://datatracker.ietf.org/doc/rfc9380/[RFC 9380].
+* *Group:* `P-256` (also known as `secp256r1` or `prime256v1`).
+* *Hash Function:* `SHA-256`.
+* *Hash-to-Group:* `SSWU` (Simplified Shallue-van de Woestijne-Ulas) method, compliant with https://datatracker.ietf.org/doc/rfc9380/[RFC 9380].
 
 === 4.3. Protocol Configuration
 
@@ -92,7 +92,7 @@ Implementations *MUST* operate in *Base Mode*. The use of Verifiable mode (VOPRF
 
 === 4.5. Rationale
 
-The *P-256* curve is selected over ristretto255 or decaf448 to prioritize:
+The `P-256` curve is selected over `ristretto255` or `decaf448` to prioritize:
 
 . *Hardware Compatibility:* Native support in the majority of commercial HSMs and Trusted Platform Modules (TPMs) used by CPOs and eMSPs.
 . *Compliance:* Alignment with FIPS 186-4 and other regulatory standards common in the payment and energy sectors.
