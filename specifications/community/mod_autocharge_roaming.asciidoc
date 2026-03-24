@@ -1,0 +1,657 @@
+[WARNING]
+====
+This is an *unofficial community extension*, not part of the official OCPI specification.
+It is authored by H. Ebabil (Chargemap), A. Pinto (Powerdot), T. Franquelin (Electra) — version 0.1 (2026-03-20).
+====
+
+== Abstract
+
+This document specifies the interoperation mechanism for "Autocharge" between Charge Point Operators (CPOs) and e-Mobility Service Providers (eMSPs). It does not define the internal implementation of Autocharge within a CPO's local network, but rather the standard for exchanging identifiers and authorizations in a roaming context using the Open Charge Point Interface (OCPI).
+
+To address privacy (GDPR) and security concerns regarding the use of Media Access Control (MAC) addresses as identifiers, this protocol mandates the use of *OPRF* (Oblivious Pseudorandom Functions) as a way to exchange this sensitive data securely and in a decentralized way, in the spirit of OCPI.
+
+== 1. Introduction
+
+=== 1.1. Why Autocharge?
+
+The current state of EV charging often requires manual authentication steps (RFID, App) that introduce friction. While ISO 15118 (Plug & Charge) addresses this via PKI, a significant portion of the existing vehicle fleet and infrastructure remains incompatible. It is also complex, both in technical and usability terms. Autocharge bridges this gap by utilizing the vehicle's MAC address as a non-unique identifier.
+
+=== 1.2. Vision & Limitations
+
+Autocharge offers a pragmatic, but somewhat simplistic approach to seamless charging. It has inherent limitations due to its reliance on the MAC address, which is a permanent, short, and easy-to-capture identifier.
+
+In order to create a simple alternative to Plug & Charge with less limitations than Autocharge, the industry would need to rely on a simple, bidirectional exchange protocol between car manufacturers (OEMs) and CPOs on the one hand, and between OEMs and eMSPs on the other.
+
+=== 1.3. Single Active Connection Principle
+
+In order to make the system transparent for end users, a given car/user pair should be linked to a single eMSP. While we can't easily enforce this, we should consider this situation as an anomaly and strive to notify users in case of multiple activations.
+
+== 2. Conventions and Terminology
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals.
+
+*CPO*:: Charge Point Operator.
+
+*eMSP*:: e-Mobility Service Provider.
+
+*VID*:: Vehicle ID (The Hashed MAC Address).
+
+*OEM*:: Original Equipment Manufacturer. It designates the car makers in this document.
+
+*OPRF*:: Oblivious Pseudorandom Functions, and by extension the protocol (RFC 9497) that makes use of these to hash MAC addresses while preserving confidentiality.
+
+== 3. Solution Overview
+
+=== How It Works
+
+This protocol uses *OPRF (Oblivious Pseudorandom Functions)* to enable privacy-preserving Autocharge across multiple charging networks:
+
+. *Vehicle plugs in:* The CPO captures the vehicle's MAC address and cryptographically blinds it before sending to eMSPs.
+. *Discovery:* Each eMSP evaluates the blinded identifier with its private key and returns a response. The CPO unblinds these to check if the vehicle is recognized.
+. *Authorization:* If matched, charging starts automatically. If not, the user authenticates manually (RFID/App), and the eMSP registers the vehicle for future sessions.
+
+=== Why OPRF?
+
+OPRF ensures that *MAC addresses are never shared in plaintext*, protecting user privacy while maintaining the decentralized architecture of OCPI. Each eMSP independently manages its own keys and vehicle registrations. No central authority is needed.
+
+== 4. Security Specification
+
+=== 4.1. Cryptographic Primitive
+
+This specification relies exclusively on the *Oblivious Pseudorandom Function (OPRF)* primitive as defined in RFC 9497. The OPRF is used to compute a deterministic, pseudorandom identifier (the VID) from a MAC address, such that the CPO learns only the output while the eMSP's private key remains confidential.
+
+No symmetric encryption (AEAD) or key derivation function (KDF) is mandated at the OPRF layer; confidentiality and integrity of the transport are delegated to the OCPI transport layer (TLS). See <<_4_2_oprf_suite_selection>> for the specific OPRF suite, curve parameters, and hash function required by this specification.
+
+=== 4.2. OPRF Suite Selection
+
+To ensure maximum interoperability across diverse hardware and software environments, all implementations *MUST* utilize the following Oblivious Pseudorandom Function (OPRF) suite as defined in RFC 9497:
+
+* *Suite ID:* `OPRF-P256-SHA256`
+* *Mode:* Base Mode (Identifier `0x00`)
+
+This suite comprises the following primitives:
+
+* *Group:* P-256 (also known as secp256r1 or prime256v1).
+* *Hash Function:* SHA-256.
+* *Hash-to-Group:* SSWU (Simplified Shallue-van de Woestijne-Ulas) method, compliant with RFC 9380.
+
+=== 4.3. Protocol Configuration
+
+Implementations *MUST* operate in *Base Mode*. The use of Verifiable mode (VOPRF) is *NOT REQUIRED* for this specification, as the trust model assumes a bilateral agreement where the authenticity of the eMSP is established via the transport layer (OCPI) rather than the OPRF protocol itself.
+
+=== 4.4. Serialization
+
+* *Elements:* Group elements (public keys and blinded elements) *MUST* be serialized using the standard uncompressed format (`0x04 || X || Y`) or compressed format (`0x02/0x03 || X`) as defined in SEC 1, subject to the constraints of the underlying OPRF library.
+* *Scalars:* Scalar values (private keys) *MUST* be serialized as 32-byte big-endian integers.
+
+=== 4.5. Rationale
+
+The *P-256* curve is selected over ristretto255 or decaf448 to prioritize:
+
+. *Hardware Compatibility:* Native support in the majority of commercial HSMs and Trusted Platform Modules (TPMs) used by CPOs and eMSPs.
+. *Compliance:* Alignment with FIPS 186-4 and other regulatory standards common in the payment and energy sectors.
+. *Library Availability:* Ubiquitous support in standard cryptographic providers (e.g., OpenSSL, Bouncy Castle, WebCrypto API) without requiring specialized dependencies.
+
+=== 4.6. Identifier vs. Authenticator Distinction
+
+The VID defined in this specification is an *Identifier*, not an *Authenticator*. It is susceptible to spoofing at the PLC layer. It might also not be unique, though MAC addresses should in theory be.
+
+Therefore, the eMSP *MUST NOT* authorize a session based solely on the presence of a valid VID. The eMSP *MUST* implement a *"Contextual Verification Layer"*.
+
+*Example Contextual Checks:*
+
+* *Geolocation:* Verify user mobile device proximity to the EVSE.
+* *Impossible Travel:* Analyze distance/time from last session.
+* *Velocity:* Detect concurrent usage of the same VID.
+* *Notification:* Notify when a charge starts, and offer a way to stop it quickly.
+* *Confirmation:* Require a manual confirmation from a user device (phone, wearable, ...).
+
+== 5. Protocol Workflows
+
+=== 5.1. Phase 1: Binding (Association)
+
+==== 5.1.1. Binding Before Regular Charge Begins
+
+This flow establishes the link between a vehicle (MAC) and a User Account when no Autocharge link currently exists.
+
+*Prerequisite:* The vehicle is plugged in. The CPO has captured the MAC address.
+
+. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
+. *Broadcast Query:* The CPO broadcasts this *Blinded MAC* to all available eMSPs (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
+. *Evaluation:* The eMSPs respond with the evaluated element (blind signature).
+. *Local Check:* The CPO unblinds the response to get the VID (Hashed MAC). It checks this VID against its local database.
+. *Failure:* The check fails (VID not found), confirming this vehicle is not yet authorized for Autocharge.
+. *Manual Auth:* The user authenticates manually using an RFID card or App.
+. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
+. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
+. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
+. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+
+.Phase 1a — Binding before regular charge
+++++
+<pre class="mermaid">
+sequenceDiagram
+    actor User as EV Driver
+    participant CPO as CPO System
+    participant eMSPs as eMSPs (broadcast)
+    participant eMSP as Authorizing eMSP
+
+    Note over CPO: Vehicle plugs in — MAC address captured
+    CPO->>CPO: Blind MAC address (OPRF)
+    CPO->>eMSPs: POST /oprf/sign (blinded MAC)
+    eMSPs-->>CPO: Evaluated elements (blind signatures)
+    CPO->>CPO: Unblind responses → compute VID
+    CPO->>CPO: Check VID in local DB → not found
+    Note over User,CPO: Manual authentication required
+    User->>CPO: Authenticate (RFID / App)
+    CPO->>eMSP: Token authorization request
+    eMSP-->>CPO: Token valid → session authorized
+    Note over CPO: Charge starts
+    CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
+    eMSP->>eMSP: Validate binding (session + token check)
+    eMSP-->>CPO: AUTO_CHARGE_GRANTED
+    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
+</pre>
+++++
+
+==== 5.1.2. Binding After Regular Charge
+
+This flow specifies the behaviour on regular charges for CPOs/eMSPs accepting autocharge roaming (`AUTO_CHARGE_CAPABLE`). This establishes the link between a User Account and a vehicle (VID) following a successful regular charge start.
+
+*Prerequisite:* The vehicle is not plugged in before starting the charge.
+
+. *Manual Auth:* The user authenticates manually using an RFID card or App.
+. *Session Authorization:* The eMSP validates the token and authorizes the session. The charge starts.
+. *Blind MAC:* The CPO takes the captured MAC address and applies the random OPRF blinding factor to create a *Blinded MAC*.
+. *If the eMSP is `AUTO_CHARGE_CAPABLE`:*
+.. *Query the concerned eMSP:* The CPO queries the eMSP responsible for the current charge using this *Blinded MAC* (`POST /oprf/sign`). It is *RECOMMENDED* to implement a 5 seconds timeout.
+.. *Evaluation:* The eMSP responds with the evaluated element (blind signature).
+.. *Binding Request:* The CPO sends the tuple `+{VID, Token UID, Session ID}+` to the authorizing eMSP (`POST /vehicles`).
+.. *Validation:* The eMSP validates the binding request (checking the session and token are valid).
+.. *Propagation:* The eMSP confirms the link (`AUTO_CHARGE_GRANTED`) and pushes the new `+{VID, Token UID}+` entry to all CPOs in the network, making it available for future roaming.
+
+.Phase 1b — Binding after regular charge
+++++
+<pre class="mermaid">
+sequenceDiagram
+    actor User as EV Driver
+    participant CPO as CPO System
+    participant eMSP as Authorizing eMSP (AUTO_CHARGE_CAPABLE)
+
+    User->>CPO: Authenticate (RFID / App)
+    CPO->>eMSP: Token authorization request
+    eMSP-->>CPO: Token valid → session authorized
+    Note over CPO: Charge starts
+    CPO->>CPO: Capture MAC, blind it (OPRF)
+    CPO->>eMSP: POST /oprf/sign (blinded MAC)
+    eMSP-->>CPO: Evaluated element (blind signature)
+    CPO->>CPO: Unblind → compute VID
+    CPO->>eMSP: POST /vehicles {VID, token_uid, session_id}
+    eMSP->>eMSP: Validate binding (session + token check)
+    eMSP-->>CPO: AUTO_CHARGE_GRANTED
+    eMSP->>CPOs: PUT /vehicles/{vid} (push VID to all CPOs)
+</pre>
+++++
+
+=== 5.2. Phase 2: Authorization (Session Start)
+
+This flow describes the standard Autocharge experience where the user is already enrolled.
+
+. *Blind MAC:* The CPO gets the MAC address from the charger and applies the OPRF random blinding factor.
+. *Broadcast Query:* The CPO broadcasts the *Blinded MAC* to connected eMSPs (`POST /oprf/sign`).
+. *Local Lookup:*
+** eMSPs return the blind signatures (Evaluated Element).
+** CPO unblinds the signatures to obtain the VID.
+** CPO checks its local whitelist database for this VID and finds a match (retrieving the associated *Token UID* and *eMSP ID*).
+. *Authorization:* The CPO sends a standard OCPI `Authorize` request to the identified eMSP with:
+** `token_uid`: The VID (Hashed MAC)
+** `type`: `VEHICLE_HASHED_MAC_IDENTIFIER` (New Enum)
+. *Verification:* The eMSP performs Contextual Verification.
+. *Charge Start:* The charge starts upon success (`AuthorizationInfo: ALLOWED`).
+
+.Phase 2 — Authorization (session start)
+++++
+<pre class="mermaid">
+sequenceDiagram
+    participant CPO as CPO System
+    participant eMSPs as eMSPs (broadcast)
+    participant eMSP as Identified eMSP
+
+    Note over CPO: Vehicle plugs in — MAC address captured
+    CPO->>CPO: Blind MAC address (OPRF)
+    CPO->>eMSPs: POST /oprf/sign (blinded MAC)
+    eMSPs-->>CPO: Evaluated elements
+    CPO->>CPO: Unblind → compute VID
+    CPO->>CPO: Check whitelist → VID found (Token UID + eMSP ID)
+    CPO->>eMSP: POST /authorize (token_uid=VID, type=VEHICLE_HASHED_MAC_IDENTIFIER)
+    eMSP->>eMSP: Contextual Verification
+    eMSP-->>CPO: AuthorizationInfo: ALLOWED
+    Note over CPO: Charge starts
+</pre>
+++++
+
+*Authentication refused:* if the contextual validation fails (with a valid, activated token), the CPO *MUST* respond with an `AuthorizationInfo` with `allowed: NOT_ALLOWED`. The other validation failures (token not found or invalidated) follow the same rules as RFID tokens.
+
+*Conflict resolution:* it might happen that the user is erroneously enrolled with multiple eMSPs at the same time. When this happens, CPOs should send the `Authorize` request to all concerned eMSPs. In case of multiple validations, the CPO *MUST* choose one eMSP and start the charge with it, and notify the other ones of the conflict.
+
+=== 5.3. Phase 3: Revocation
+
+Revocation can be triggered by the User or the eMSP.
+
+. User requests disablement via eMSP App, or eMSP disables Autocharge unilaterally.
+. eMSP updates status to `REVOKED`.
+. eMSP sends `PUT /vehicles/+{vid}+` to relevant CPOs (push) or CPO updates via periodic polling.
+. Subsequent Auth requests for this VID *MUST* return `INVALID`.
+
+== 6. OCPI Extension: Vehicles Module
+
+This specification adds a module `/vehicles` to the OCPI standard.
+
+=== 6.1. Data Model: Vehicle Object
+
+[cols="3,2,1,5",options="header"]
+|===
+| Property | Type | Optional | Description
+
+| `country_code`
+| CiString(2)
+| no
+| ISO-3166 alpha-2 country code of the eMSP that owns this object (as in OCPI Token).
+
+| `party_id`
+| CiString(3)
+| no
+| EVSE Operator or eMSP identifier of the party that owns this object, following OCPI conventions.
+
+| `vehicle_id`
+| String
+| no
+| Corresponding to hashed MAC address.
+
+| `contract_id`
+| String
+| no
+| Contract ID of the user in the eMSP system, used later for CDRs.
+
+| `auto_charge_status`
+| AutoChargeStatus
+| no (default: AUTO_CHARGE_REVOKED)
+| Set to `AUTO_CHARGE_GRANTED` if the autocharge feature has been accepted by the end user. By default, when creating, it should be set to `AUTO_CHARGE_REVOKED` until the user accepts. If the user does not wish to be onboarded, the eMSP can set this value to `AUTO_CHARGE_DO_NOT_ASK`.
+
+| `date_created`
+| DateTime
+| no
+| Date and time when the hashed vehicle ID has been sent from the CPO to the eMSP. If the hashed vehicle ID has been sent multiple times, the first date is stored in this field.
+
+| `date_authorized`
+| DateTime
+| yes
+| Date and time when the eMSP end user has authorized the autocharge feature request. If the user has authorized the authorization multiple times, the first date is stored in this field.
+
+| `date_revoked`
+| DateTime
+| yes
+| Date and time when the eMSP end user has revoked the autocharge feature request. If the user has revoked the authorization multiple times, the last date is stored in this field.
+
+| `last_updated`
+| DateTime
+| no
+| The greatest of `date_created`, `date_authorized` and `date_revoked`, used to paginate.
+|===
+
+The last change made from the end user prevails. If the last update is an authorization grant, then the autocharge feature *MUST* be active for a given user. If it's a revoke action, then the feature *MUST* be inactive.
+
+*When end user authorizes the autocharge feature:*
+
+* The `date_authorized` *MUST* be updated to current date and time.
+* The `date_revoked` *MUST* be unset.
+* The `auto_charge_status` enumeration *MUST* be set to `AUTO_CHARGE_GRANTED`.
+
+*When end user revokes the autocharge feature:*
+
+* The `date_revoked` *MUST* be updated to current date and time.
+* The `auto_charge_status` enumeration *MUST* be set to `AUTO_CHARGE_REVOKED`.
+
+*When end user does not wish to be asked again for the autocharge feature:*
+
+* The `auto_charge_status` *MUST* be set to `AUTO_CHARGE_DO_NOT_ASK` so CPO should not send the pairing request any more.
+
+[[AutoChargeStatus]]
+==== AutoChargeStatus Enum
+
+[cols="2,5",options="header"]
+|===
+| Value | Description
+
+| `AUTO_CHARGE_GRANTED`
+| The end user has accepted the autocharge feature. The vehicle is authorized for automatic charging.
+
+| `AUTO_CHARGE_REVOKED`
+| The autocharge feature is inactive (default). The vehicle is not authorized for automatic charging.
+
+| `AUTO_CHARGE_DO_NOT_ASK`
+| The end user does not wish to be asked again for the autocharge feature. The CPO should not send pairing requests for this vehicle.
+|===
+
+=== 6.2. Interface and Endpoints — Receiver Interface (CPO)
+
+These endpoints are implemented by the *CPO*.
+
+==== PUT Method
+
+The PUT method is used by the eMSP to notify CPOs of any new or updated vehicle records.
+
+*Endpoint:*
+----
+{vehicles_endpoint_url}/{vehicle_id}
+----
+
+*Example:*
+----
+https://www.server.com/ocpi/cpo/2.2/vehicles/ABC123HASHED
+----
+
+*URL Parameters:*
+
+[cols="2,2,1,4",options="header"]
+|===
+| Parameter | Datatype | Required | Description
+
+| `vehicle_id`
+| string
+| yes
+| The hashed vehicle ID for which the status is being updated.
+|===
+
+*Request Body:*
+
+[cols="2,1,4",options="header"]
+|===
+| Type | Card. | Description
+
+| Vehicle
+| 1
+| The updated Vehicle object reflecting the changes.
+|===
+
+=== 6.3. Interface and Endpoints — Sender Interface (eMSP)
+
+These endpoints are implemented by the *eMSP*.
+
+==== GET Method
+
+*Endpoint:*
+----
+{vehicles_endpoint_url}[?offset={offset}]&[limit={limit}]&[date_from={date_from}]&[date_to={date_to}]
+----
+
+*Examples:*
+----
+https://www.server.com/ocpi/emsp/2.2/vehicles/?offset=50
+https://ocpi.server.com/2.2/vehicles/?date_from=2025-10-01T12:00:00Z
+----
+
+*Query Parameters:*
+
+[cols="2,2,1,4",options="header"]
+|===
+| Parameter | Datatype | Required | Description
+
+| `offset`
+| integer
+| no
+| The offset of the first object returned. Default is 0.
+
+| `limit`
+| integer
+| no
+| Maximum number of objects to GET.
+
+| `date_from`
+| DateTime
+| no
+| Only return objects that have `last_updated` after or equal to this Date/Time (inclusive).
+
+| `date_to`
+| DateTime
+| no
+| Only return objects that have `last_updated` up to this Date/Time, but not including (exclusive).
+|===
+
+*Response Data:*
+
+[cols="2,1,4",options="header"]
+|===
+| Type | Card. | Description
+
+| Vehicle Object
+| *
+| List of all the VID / user pairings.
+|===
+
+==== POST Method — Register Vehicle
+
+The POST method is used by the CPO to push a new hashed vehicle ID to the eMSP based on a Token UID.
+
+*Endpoint:*
+----
+{vehicles_endpoint_url}
+----
+
+*Example:*
+----
+https://www.server.com/ocpi/emsp/2.2/vehicles
+----
+
+*Request Body:*
+
+[cols="2,2,1,4",options="header"]
+|===
+| Property | Type | Card. | Description
+
+| `vehicle_id`
+| string
+| 1
+| The hashed vehicle ID to be registered.
+
+| `token_uid`
+| CiString(36)
+| 1
+| The unique Token UID used to identify the user and authorize the auto-charge association (matches `uid` in the Token module).
+
+| `session_id`
+| string
+| 1
+| The id of the session from which the pairing originates.
+|===
+
+*Response Data:*
+
+[cols="2,1,4",options="header"]
+|===
+| Type | Card. | Description
+
+| Vehicle
+| 1
+| The Vehicle object containing the registered vehicle details and status.
+|===
+
+*Example — Successful Response (Status 1000):*
+
+[source,json]
+----
+{
+  "data": {
+    "country_code": "FR",
+    "party_id": "ELC",
+    "vehicle_id": "ABC123HASHED",
+    "contract_id": "DE8ACC12E46L89",
+    "auto_charge_status": "AUTO_CHARGE_GRANTED",
+    "date_created": "2023-10-01T12:00:00Z",
+    "date_authorized": "2023-10-01T12:00:00Z"
+  },
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2023-10-01T12:00:01Z"
+}
+----
+
+==== POST Method — Conflict Notification
+
+The POST method is used by the CPO to notify the eMSP that a specific hashed vehicle ID is in conflict. This status indicates that an autocharge configuration for this vehicle has been detected in another eMSP environment. The receiving eMSP *SHOULD* then take action to notify the user of the anomaly and prompt for correction.
+
+*Endpoint:*
+----
+{vehicles_endpoint_url}/conflict
+----
+
+*Example:*
+----
+https://www.server.com/ocpi/emsp/2.2/vehicles/conflict
+----
+
+*Request Body:*
+
+[cols="2,2,1,4",options="header"]
+|===
+| Property | Type | Card. | Description
+
+| `vehicle_id`
+| string
+| 1
+| The hashed vehicle ID for which the conflict was detected.
+
+| `contract_id`
+| string
+| 1
+| Contract ID of the user in the eMSP system.
+
+| `message`
+| DisplayText
+| ?
+| Optional human-readable message describing the conflict (e.g., "Vehicle registered with another MSP").
+|===
+
+*Response Data:*
+
+[cols="2,1,4",options="header"]
+|===
+| Type | Card. | Description
+
+| string
+| ?
+| Optional confirmation message (e.g. "Conflict notification processed").
+|===
+
+==== POST Method — OPRF Sign
+
+The POST method is used by the CPO to request a blind signature from the eMSP. The CPO sends a blinded element (representing the MAC address), and the eMSP returns the evaluated element (signed with its private key) without ever seeing the raw MAC address.
+
+*Endpoint:*
+----
+{oprf_endpoint_url}/sign
+----
+
+*Example:*
+----
+https://www.server.com/ocpi/emsp/2.2/oprf/sign
+----
+
+*Request Body:*
+
+[cols="2,2,1,4",options="header"]
+|===
+| Property | Type | Card. | Description
+
+| `blinded_element`
+| string
+| 1
+| The blinded MAC address encoded as a hexadecimal string representing a point on the elliptic curve (P-256).
+|===
+
+*Response Data:*
+
+[cols="2,1,4",options="header"]
+|===
+| Type | Card. | Description
+
+| `evaluated_element`
+| 1
+| The result of the scalar multiplication of the `blinded_element` by the eMSP's private key, encoded as a hexadecimal string.
+|===
+
+*Example Request:*
+
+[source,json]
+----
+{
+  "blinded_element": "041a2b3c..."
+}
+----
+
+*Example Response:*
+
+[source,json]
+----
+{
+  "data": {
+    "evaluated_element": "04987abc..."
+  },
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2023-10-24T14:15:22Z"
+}
+----
+
+== 7. Compatibility and Discovery
+
+=== 7.1. MAC Address Filtering (CPO Side)
+
+Not all vehicles utilize static MAC addresses. To prevent enrollment loops for incompatible vehicles (e.g., randomized MACs):
+
+* The eMSP *MUST* implement a car model check to verify autocharge capability before offering this capability to the user. The exact nature of this check is outside the scope of this document.
+* The CPO *MAY* implement Regex-based filtering on the Vendor Prefix (OUI).
+** *Whitelist:* Known static MAC vendors.
+** *Blacklist:* Known dynamic/randomized MAC vendors (e.g., VAG Group).
+** Validation *MUST* occur on the CPO side before requesting a hash from the Oracle.
+
+=== 7.2. Capability Discovery
+
+CPOs supporting this specification *SHOULD* announce the capability `AUTO_CHARGE_CAPABLE` in the OCPI EVSE object.
+
+=== 7.3. Module Discovery
+
+eMSP and CPO *MUST* support the new `vehicles` module.
+
+*Example:*
+
+[source,json]
+----
+{
+  "version": "2.0",
+  "endpoints": [
+    {
+      "identifier": "credentials",
+      "url": "https://example.com/ocpi/cpo/2.0/credentials/"
+    },
+    {
+      "identifier": "vehicles",
+      "url": "https://example.com/ocpi/cpo/2.0/vehicles/"
+    }
+  ]
+}
+----
+
+=== 7.4. Token Module Update
+
+A new value *MUST* be added in the OCPI `TokenType` enumeration to characterise a session identified by the vehicle identifier. This new value will be `VEHICLE_HASHED_MAC_IDENTIFIER`. In addition, this new value *MUST NOT* be sent by the CPO unless both parties are supporting the "vehicles" module. The `whitelist` property *MUST* be set to `NEVER`.
+
+== 8. Security Considerations
+
+=== 8.1. Rate Limiting & Anomaly Detection
+
+The eMSP `/oprf/sign` endpoint must support rate limiting and anomaly detection to prevent a bad actor from creating rainbow tables.
+
+=== 8.2. Privacy
+
+Raw MAC addresses *MUST NOT* be logged in persistent storage or cache by the CPO or transmitted via OCPI. Only the VID (OPRF output) is permitted for storage and inter-party communication.

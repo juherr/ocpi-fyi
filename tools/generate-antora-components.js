@@ -50,6 +50,8 @@ const UPSTREAM_BRANCHES = {
   '2.2.0': 'release-2.2-bugfixes',
   '2.1.1': 'release-2.1.1-bugfixes',
 }
+// Versions that include community extensions from specifications/community/
+const COMMUNITY_VERSIONS = new Set(['2.2.1', '2.3.0'])
 const LIBRARIES_BY_VERSION = {
   '2.2.1': [
     {
@@ -322,6 +324,21 @@ function listSpecificationVersions() {
 function listRootDocFiles(sourceDir) {
   return fs
     .readdirSync(sourceDir, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        (entry.name.endsWith('.asciidoc') || entry.name.endsWith('.md')) &&
+        !IGNORE_DOC_FILES.has(entry.name)
+    )
+    .map((entry) => entry.name)
+    .sort((a, b) => a.localeCompare(b))
+}
+
+function listCommunityDocFiles() {
+  const communityDir = path.join(SPECIFICATIONS_DIR, 'community')
+  if (!fileExists(communityDir)) return []
+  return fs
+    .readdirSync(communityDir, { withFileTypes: true })
     .filter(
       (entry) =>
         entry.isFile() &&
@@ -1327,10 +1344,11 @@ ${apiSection}
   )
 }
 
-function generateComponentPages(componentDir, version, asciidocFiles) {
+function generateComponentPages(componentDir, version, asciidocFiles, communityFiles = []) {
   const moduleRoot = path.join(componentDir, 'modules', 'ROOT')
   const pagesDir = path.join(moduleRoot, 'pages')
   const specPagesDir = path.join(pagesDir, 'spec')
+  const extensionsPagesDir = path.join(pagesDir, 'extensions')
   const partialsSourceDir = path.join(moduleRoot, 'partials', 'src')
 
   ensureDir(specPagesDir)
@@ -1364,6 +1382,31 @@ include::partial$src/${partialName}[]
     )
 
     navLines.push(`** xref:spec/${wrapperName}[${title}]`)
+  }
+
+  if (communityFiles.length > 0) {
+    ensureDir(extensionsPagesDir)
+    const communityPartialsDir = path.join(partialsSourceDir, 'community')
+    ensureDir(communityPartialsDir)
+
+    navLines.push('* Extensions')
+
+    for (const fileName of communityFiles) {
+      const wrapperName = toAdocName(fileName)
+      const wrapperPath = path.join(extensionsPagesDir, wrapperName)
+      const title = titleFromFilename(fileName)
+
+      writeFile(
+        wrapperPath,
+        `= ${title}
+:page-community-extension: true
+
+include::partial$src/community/${wrapperName}[]
+`
+      )
+
+      navLines.push(`** xref:extensions/${wrapperName}[${title}]`)
+    }
   }
 
   navLines.push('* xref:library.adoc[Library]')
@@ -1400,6 +1443,7 @@ function syncVersion(versionInfo) {
   const partialsSourceDir = path.join(moduleRoot, 'partials', 'src')
 
   const docFiles = listRootDocFiles(sourceDir)
+  const communityFiles = COMMUNITY_VERSIONS.has(version) ? listCommunityDocFiles() : []
 
   if (fileExists(componentDir)) {
     fs.rmSync(componentDir, { recursive: true, force: true })
@@ -1417,11 +1461,22 @@ function syncVersion(versionInfo) {
     }
   }
 
-  generateComponentPages(componentDir, version, docFiles)
+  generateComponentPages(componentDir, version, docFiles, communityFiles)
 
   for (const fileName of docFiles) {
     const sourcePath = path.join(sourceDir, fileName)
     const targetPath = path.join(partialsSourceDir, toAdocName(fileName))
+    const sourceContent = fs.readFileSync(sourcePath, 'utf8')
+    const transformedContent = fileName.endsWith('.md')
+      ? convertMarkdownToAsciidoc(sourceContent)
+      : rewriteAsciidocReferences(sourceContent)
+    writeFile(targetPath, transformedContent)
+  }
+
+  const communitySourceDir = path.join(SPECIFICATIONS_DIR, 'community')
+  for (const fileName of communityFiles) {
+    const sourcePath = path.join(communitySourceDir, fileName)
+    const targetPath = path.join(partialsSourceDir, 'community', toAdocName(fileName))
     const sourceContent = fs.readFileSync(sourcePath, 'utf8')
     const transformedContent = fileName.endsWith('.md')
       ? convertMarkdownToAsciidoc(sourceContent)
