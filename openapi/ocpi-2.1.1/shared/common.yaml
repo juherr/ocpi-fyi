@@ -77,19 +77,6 @@ components:
           maxLength: 512
           description: Text to be displayed to an end user. No markup, HTML etc. allowed.
       additionalProperties: true
-    Price:
-      type: object
-      description: Price with VAT information.
-      required:
-        - excl_vat
-      properties:
-        excl_vat:
-          type: number
-          description: Price/Cost excluding VAT.
-        incl_vat:
-          type: number
-          description: Price/Cost including VAT.
-      additionalProperties: true
     GeoLocation:
       type: object
       description: Geographic coordinates (WGS 84).
@@ -295,17 +282,6 @@ components:
           type: number
           description: Amount of this environmental impact in g/kWh.
       additionalProperties: true
-    Role:
-      type: string
-      enum:
-        - CPO
-        - EMSP
-        - HUB
-        - NAP
-        - NSP
-        - OTHER
-        - SCSP
-      description: The role of a party in the EV charging ecosystem.
     ImageCategory:
       anyOf:
         - type: string

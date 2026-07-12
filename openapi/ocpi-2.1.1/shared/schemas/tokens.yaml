@@ -7,42 +7,32 @@ components:
   schemas:
     LocationReferences:
       type: object
-      description: References to a Location and specific EVSEs.
+      description: References to location details.
       required:
         - location_id
       properties:
         location_id:
           type: string
-          maxLength: 36
+          maxLength: 39
           description: Unique identifier for the location.
         evse_uids:
           type: array
           items:
             type: string
+            maxLength: 39
+          description: Unique identifiers for EVSEs within the CPO's platform for the
+            EVSEs within the given location.
+        connector_ids:
+          type: array
+          items:
+            type: string
             maxLength: 36
-          description: Unique identifiers for EVSEs within the given location.
-      additionalProperties: true
-    EnergyContract:
-      type: object
-      description: Information about an EV driver's energy supply contract.
-      required:
-        - supplier_name
-      properties:
-        supplier_name:
-          type: string
-          maxLength: 64
-          description: Name of the energy supplier for this Token.
-        contract_id:
-          type: string
-          maxLength: 64
-          description: Contract ID at the energy supplier.
+          description: Identifies the connectors within the given EVSEs.
       additionalProperties: true
     TokenType:
       anyOf:
         - type: string
           enum:
-            - AD_HOC_USER
-            - APP_USER
             - OTHER
             - RFID
         - type: string

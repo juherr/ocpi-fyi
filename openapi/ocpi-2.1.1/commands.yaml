@@ -261,28 +261,42 @@ components:
           type: string
           format: uri
           maxLength: 255
-          description: URL that the CommandResult POST should be sent to.
+          description: URL that the CommandResult POST should be sent to. This URL
+            might contain a unique ID to distinguish between ReserveNow requests.
         token:
           $ref: ./tokens.yaml#/components/schemas/Token
         expiry_date:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         reservation_id:
-          type: string
-          maxLength: 36
-          description: Unique reservation ID.
+          type: integer
+          description: Reservation id, unique for this reservation. If the Charge
+            Point already has a reservation that matches this reservation_id the
+            Charge Point will replace the reservation.
         location_id:
           type: string
-          maxLength: 36
-          description: Location.id of the Location to reserve at.
+          maxLength: 39
+          description: Location.id of the Location (belonging to the CPO this
+            request is sent to) for which to reserve an EVSE.
         evse_uid:
           type: string
-          maxLength: 36
-          description: Optional EVSE.uid of the specific EVSE to reserve.
-        authorization_reference:
-          type: string
-          maxLength: 36
-          description: Reference to the authorization given by the eMSP.
+          maxLength: 39
+          description: Optional EVSE.uid of the EVSE of this Location if a specific
+            EVSE has to be reserved.
       additionalProperties: true
+      example:
+        response_url: https://example.com/ocpi/emsp/2.1.1/commands/RESERVE_NOW/1234
+        token:
+          uid: "012345678"
+          type: RFID
+          auth_id: DE8ACC12E46L89
+          issuer: TheNewMotion
+          valid: true
+          whitelist: ALLOWED
+          last_updated: "2018-12-10T17:16:15Z"
+        expiry_date: "2018-12-11T17:00:00Z"
+        reservation_id: 1234
+        location_id: LOC1
+        evse_uid: "3256"
     StartSession:
       type: object
       description: Request to start a charging session.
@@ -295,27 +309,33 @@ components:
           type: string
           format: uri
           maxLength: 255
-          description: URL that the CommandResult POST should be sent to.
+          description: URL that the CommandResult POST should be sent to. This URL
+            might contain a unique ID to distinguish between StartSession requests.
         token:
           $ref: ./tokens.yaml#/components/schemas/Token
         location_id:
           type: string
-          maxLength: 36
-          description: Location.id of the Location to start charging at.
+          maxLength: 39
+          description: Location.id of the Location (belonging to the CPO this
+            request is sent to) on which a session is to be started.
         evse_uid:
           type: string
-          maxLength: 36
-          description: Optional EVSE.uid. Required when connector_id is set.
-        connector_id:
-          type: string
-          maxLength: 36
-          description: Optional Connector.id. Required when
-            START_SESSION_CONNECTOR_REQUIRED capability is set.
-        authorization_reference:
-          type: string
-          maxLength: 36
-          description: Reference to the authorization given by the eMSP.
+          maxLength: 39
+          description: Optional EVSE.uid of the EVSE of this Location on which a
+            session is to be started.
       additionalProperties: true
+      example:
+        response_url: https://example.com/ocpi/emsp/2.1.1/commands/START_SESSION/4321
+        token:
+          uid: "012345678"
+          type: RFID
+          auth_id: DE8ACC12E46L89
+          issuer: TheNewMotion
+          valid: true
+          whitelist: ALLOWED
+          last_updated: "2018-12-10T17:16:15Z"
+        location_id: LOC1
+        evse_uid: "3256"
     StopSession:
       type: object
       description: Request to stop an ongoing charging session.
@@ -327,12 +347,16 @@ components:
           type: string
           format: uri
           maxLength: 255
-          description: URL that the CommandResult POST should be sent to.
+          description: URL that the CommandResult POST should be sent to. This URL
+            might contain a unique ID to distinguish between StopSession requests.
         session_id:
           type: string
           maxLength: 36
-          description: Session.id of the Session to stop.
+          description: Session.id of the Session that is requested to be stopped.
       additionalProperties: true
+      example:
+        response_url: https://example.com/ocpi/emsp/2.1.1/commands/STOP_SESSION/1
+        session_id: "1234"
     UnlockConnector:
       type: object
       description: Request to unlock a connector (for help desk operators).
@@ -346,20 +370,29 @@ components:
           type: string
           format: uri
           maxLength: 255
-          description: URL that the CommandResult POST should be sent to.
+          description: URL that the CommandResult POST should be sent to. This URL
+            might contain a unique ID to distinguish between UnlockConnector requests.
         location_id:
           type: string
-          maxLength: 36
-          description: Location.id of the Location.
+          maxLength: 39
+          description: Location.id of the Location (belonging to the CPO this
+            request is sent to) of which it is requested to unlock the connector.
         evse_uid:
           type: string
-          maxLength: 36
-          description: EVSE.uid of the EVSE.
+          maxLength: 39
+          description: EVSE.uid of the EVSE of this Location of which it is
+            requested to unlock the connector.
         connector_id:
           type: string
           maxLength: 36
-          description: Connector.id of the Connector to unlock.
+          description: Connector.id of the Connector of this Location of which it
+            is requested to unlock.
       additionalProperties: true
+      example:
+        response_url: https://example.com/ocpi/emsp/2.1.1/commands/UNLOCK_CONNECTOR/2
+        location_id: LOC1
+        evse_uid: "3256"
+        connector_id: "1"
     CommandResponse:
       type: object
       description: Immediate response from CPO indicating whether the command was
@@ -369,12 +402,9 @@ components:
       properties:
         result:
           $ref: "#/components/schemas/CommandResponseType"
-        message:
-          type: array
-          items:
-            $ref: ./shared/schemas/types.yaml#/components/schemas/DisplayText
-          description: Human-readable description of the result.
       additionalProperties: true
+      example:
+        result: ACCEPTED
     CommandResponseType:
       anyOf:
         - type: string

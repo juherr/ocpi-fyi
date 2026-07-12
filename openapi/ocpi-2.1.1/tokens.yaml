@@ -122,9 +122,8 @@ paths:
     put:
       operationId: putReceiverToken
       summary: Push Token (CPO Interface)
-      description: Push a new or updated Token object to the CPO. URL parameters
-        country_code and party_id SHALL match the corresponding values in the
-        Token object.
+      description: Push a new or updated Token object to the CPO. The URL parameters
+        country_code and party_id identify the eMSP that owns the Token.
       tags:
         - Tokens - CPO Interface
       parameters:
@@ -149,22 +148,14 @@ paths:
             schema:
               $ref: "#/components/schemas/Token"
             example:
-              country_code: DE
-              party_id: TNM
-              uid: "12345678905880"
+              uid: "012345678"
               type: RFID
-              contract_id: DE8ACC12E46L89
-              visual_number: DF000-2001-8999-1
+              auth_id: DE8ACC12E46L89
+              visual_number: DF000-2001-8999
               issuer: TheNewMotion
-              group_id: DF000-2001-8999
               valid: true
-              whitelist: ALLOWED
-              language: it
-              default_profile_type: GREEN
-              energy_contract:
-                supplier_name: Greenpeace Energy eG
-                contract_id: "0123456789"
-              last_updated: 2018-12-10T17:25:10Z
+              whitelist: ALWAYS
+              last_updated: 2015-06-29T22:39:09Z
       responses:
         "200":
           description: Token updated.
@@ -298,9 +289,12 @@ components:
       required:
         - last_updated
       properties:
+        uid:
+          type: string
+          maxLength: 36
         type:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/TokenType
-        contract_id:
+        auth_id:
           type: string
           maxLength: 36
         visual_number:
@@ -309,9 +303,6 @@ components:
         issuer:
           type: string
           maxLength: 64
-        group_id:
-          type: string
-          maxLength: 36
         valid:
           type: boolean
         whitelist:
@@ -320,11 +311,6 @@ components:
           type: string
           minLength: 2
           maxLength: 2
-        default_profile_type:
-          type: string
-          maxLength: 32
-        energy_contract:
-          $ref: ./shared/schemas/tokens.yaml#/components/schemas/EnergyContract
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
@@ -332,63 +318,47 @@ components:
       type: object
       description: Representation of a charging token.
       required:
-        - country_code
-        - party_id
         - uid
         - type
-        - contract_id
+        - auth_id
         - issuer
         - valid
         - whitelist
         - last_updated
       properties:
-        country_code:
-          type: string
-          maxLength: 2
-          description: ISO-3166 alpha-2 country code of the eMSP that owns this Token.
-        party_id:
-          type: string
-          maxLength: 3
-          description: ID of the eMSP that owns this Token.
         uid:
           type: string
           maxLength: 36
-          description: Unique ID by which this Token (combined with Token type) can be
-            identified. For RFID tokens, this is typically the RFID hidden ID.
+          description: Identification used by CPO system to identify this token.
+            Currently, in most cases, this is the RFID hidden ID as read by the RFID
+            reader.
         type:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/TokenType
-        contract_id:
+        auth_id:
           type: string
           maxLength: 36
-          description: Uniquely identifies the EV driver contract token within the eMSP's
-            platform.
+          description: Uniquely identifies the EV Driver contract token within the eMSP's
+            platform (and suboperator platforms).
         visual_number:
           type: string
           maxLength: 64
-          description: Visual readable number/identification printed on the Token.
+          description: Visual readable number/identification as printed on the Token
+            (RFID card), might be equal to the auth_id.
         issuer:
           type: string
           maxLength: 64
-          description: Issuing company name (usually printed on the RFID card).
-        group_id:
-          type: string
-          maxLength: 36
-          description: Groups multiple tokens so a session can be started with one and
-            stopped with another.
+          description: Issuing company, most of the times the name of the company printed
+            on the token (RFID card), not necessarily the eMSP.
         valid:
           type: boolean
-          description: Whether this Token is valid.
+          description: Is this Token valid.
         whitelist:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/WhitelistType
         language:
           type: string
           maxLength: 2
-          description: ISO 639-1 language code for the Token owner's preferred interface
-            language.
-        default_profile_type:
-          $ref: '#/components/schemas/ProfileType'
-        energy_contract:
-          $ref: ./shared/schemas/tokens.yaml#/components/schemas/EnergyContract
+          description: Language Code ISO 639-1. This optional field indicates the Token
+            owner's preferred interface language.
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
@@ -397,28 +367,11 @@ components:
       description: Information about the authorization status of a Token.
       required:
         - allowed
-        - token
       properties:
         allowed:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/AllowedType
-        token:
-          $ref: "#/components/schemas/Token"
         location:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/LocationReferences
-        authorization_reference:
-          type: string
-          maxLength: 36
-          description: Reference to the authorization (used in Session and CDR).
         info:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DisplayText
       additionalProperties: true
-    ProfileType:
-      anyOf:
-        - type: string
-          enum:
-            - CHEAP
-            - FAST
-            - GREEN
-            - REGULAR
-        - type: string
-      description: Type of charging profile selected by the EV driver.

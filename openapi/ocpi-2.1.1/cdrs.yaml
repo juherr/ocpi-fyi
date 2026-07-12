@@ -151,17 +151,17 @@ components:
       additionalProperties: true
     CDR:
       type: object
-      description: A Charge Detail Record is the description of a concluded charging
-        session. CDRs are immutable once sent; use Credit CDRs for corrections.
+      description: The CDR object describes the Charging Session and its costs, how
+        these costs are built up, etc. A Charge Detail Record is the description of a
+        concluded charging session. Once sent to the eMSP, a CDR cannot be changed or
+        replaced.
       required:
-        - country_code
-        - party_id
         - id
         - start_date_time
-        - end_date_time
-        - cdr_token
+        - stop_date_time
+        - auth_id
         - auth_method
-        - cdr_location
+        - location
         - currency
         - charging_periods
         - total_cost
@@ -169,36 +169,24 @@ components:
         - total_time
         - last_updated
       properties:
-        country_code:
-          type: string
-          maxLength: 2
-          description: ISO-3166 alpha-2 country code of the CPO.
-        party_id:
-          type: string
-          maxLength: 3
-          description: ID of the CPO.
         id:
           type: string
-          maxLength: 39
-          description: Unique ID of the CDR per country_code/party_id combination.
+          maxLength: 36
+          description: Uniquely identifies the CDR within the CPOs platform (and
+            suboperator platforms).
         start_date_time:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
-        end_date_time:
+        stop_date_time:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
-        session_id:
+        auth_id:
           type: string
           maxLength: 36
-          description: Unique ID of the Session for which this CDR is sent.
-        cdr_token:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/CdrToken
+          description: Reference to a token, identified by the auth_id field of the
+            Token.
         auth_method:
           $ref: ./shared/schemas/cdrs.yaml#/components/schemas/AuthMethod
-        authorization_reference:
-          type: string
-          maxLength: 36
-          description: Reference to the authorization given by the eMSP.
-        cdr_location:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/CdrLocation
+        location:
+          $ref: ./locations.yaml#/components/schemas/Location
         meter_id:
           type: string
           maxLength: 255
@@ -206,60 +194,92 @@ components:
         currency:
           type: string
           maxLength: 3
-          description: ISO-4217 code of the currency.
+          description: Currency of the CDR in ISO 4217 Code.
         tariffs:
           type: array
           items:
             $ref: ./tariffs.yaml#/components/schemas/Tariff
-          description: List of relevant Tariffs.
+          description: List of relevant tariff elements. When relevant, a "Free of
+            Charge" tariff should also be in this list, and point to a defined "Free of
+            Charge" tariff.
         charging_periods:
           type: array
           minItems: 1
           items:
             $ref: ./shared/schemas/cdrs.yaml#/components/schemas/ChargingPeriod
-          description: List of Charging Periods that make up this charging session.
-        signed_data:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/SignedData
+          description: List of charging periods that make up this charging session. A
+            session consists of 1 or more periods, where each period has a different
+            relevant Tariff.
         total_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
-        total_fixed_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          type: number
+          description: Total cost (excluding VAT) of this transaction.
         total_energy:
           type: number
-          description: Total energy charged in kWh.
-        total_energy_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          description: Total energy charged, in kWh.
         total_time:
           type: number
-          description: Total duration of the charging session in hours.
-        total_time_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          description: Total duration of this session (including the duration of
+            charging and not charging), in hours.
         total_parking_time:
           type: number
-          description: Total duration of not charging in hours.
-        total_parking_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
-        total_reservation_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          description: Total duration during this session that the EV is not being
+            charged (no energy being transferred between EVSE and EV), in hours.
         remark:
           type: string
           maxLength: 255
-          description: Optional remark with additional information.
-        invoice_reference_id:
-          type: string
-          maxLength: 39
-          description: Reference to an invoice for this CDR.
-        credit:
-          type: boolean
-          description: When true, this is a Credit CDR correcting a previous CDR.
-        credit_reference_id:
-          type: string
-          maxLength: 39
-          description: ID of the CDR that this Credit CDR corrects.
-        home_charging_compensation:
-          type: boolean
-          description: When true, this CDR is for a home charger session with financial
-            compensation.
+          description: Optional remark, can be used to provide additional human readable
+            information to the CDR, for example the reason why a transaction was stopped.
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
+      example:
+        id: "12345"
+        start_date_time: "2015-06-29T21:39:09Z"
+        stop_date_time: "2015-06-29T23:37:32Z"
+        auth_id: DE8ACC12E46L89
+        auth_method: WHITELIST
+        location:
+          id: LOC1
+          type: ON_STREET
+          name: Gent Zuid
+          address: F.Rooseveltlaan 3A
+          city: Gent
+          postal_code: "9000"
+          country: BE
+          coordinates:
+            latitude: "3.729944"
+            longitude: "51.047599"
+          evses:
+            - uid: "3256"
+              evse_id: BE-BEC-E041503003
+              status: AVAILABLE
+              connectors:
+                - id: "1"
+                  standard: IEC_62196_T2
+                  format: SOCKET
+                  power_type: AC_1_PHASE
+                  voltage: 230
+                  amperage: 64
+                  tariff_id: "11"
+                  last_updated: "2015-06-29T21:39:01Z"
+              last_updated: "2015-06-29T21:39:01Z"
+          last_updated: "2015-06-29T21:39:01Z"
+        currency: EUR
+        tariffs:
+          - id: "12"
+            currency: EUR
+            elements:
+              - price_components:
+                  - type: TIME
+                    price: 2.00
+                    step_size: 300
+            last_updated: "2015-02-02T14:15:01Z"
+        charging_periods:
+          - start_date_time: "2015-06-29T21:39:09Z"
+            dimensions:
+              - type: TIME
+                volume: 1.973
+        total_cost: 4.00
+        total_energy: 15.342
+        total_time: 1.973
+        last_updated: "2015-06-29T22:01:13Z"
