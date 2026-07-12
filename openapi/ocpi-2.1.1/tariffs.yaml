@@ -188,62 +188,58 @@ components:
       additionalProperties: true
     Tariff:
       type: object
-      description: A Tariff object describes the pricing structure for a charging session.
+      description: >-
+        A Tariff Object consists of a list of one or more TariffElements, these
+        elements can be used to create complex Tariff structures. When the list
+        of elements contains more than 1 element, then the first tariff in the
+        list with matching restrictions will be used. It is advised to always
+        set a "default" tariff, the last tariff in the list of elements with no
+        restriction. This acts as a fallback when none of the TariffElements
+        before this matches the current charging period.
       required:
-        - country_code
-        - party_id
         - id
         - currency
         - elements
         - last_updated
       properties:
-        country_code:
-          type: string
-          maxLength: 2
-          description: ISO-3166 alpha-2 country code of the CPO that owns this Tariff.
-        party_id:
-          type: string
-          maxLength: 3
-          description: ID of the CPO that owns this Tariff.
         id:
           type: string
           maxLength: 36
-          description: Uniquely identifies the Tariff within the CPO's platform.
+          description: Uniquely identifies the Tariff within the CPO's platform (and
+            suboperator platforms).
         currency:
           type: string
           maxLength: 3
-          description: ISO-4217 code of the currency of this Tariff.
-        type:
-          $ref: "#/components/schemas/TariffType"
+          description: Currency of this Tariff, ISO 4217 code.
         tariff_alt_text:
           type: array
           items:
             $ref: ./shared/schemas/types.yaml#/components/schemas/DisplayText
-          description: Alternative tariff info text in multiple languages.
+          description: List of multi language alternative tariff info text.
         tariff_alt_url:
           type: string
           format: uri
-          maxLength: 255
-          description: URL to a web page with tariff information in human readable form.
-        min_price:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
-        max_price:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          description: Alternative URL to tariff info.
         elements:
           type: array
           minItems: 1
           items:
             $ref: "#/components/schemas/TariffElement"
           description: List of Tariff Elements.
-        start_date_time:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
-        end_date_time:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         energy_mix:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/EnergyMix
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
+      example:
+        id: "12"
+        currency: EUR
+        elements:
+          - price_components:
+              - type: TIME
+                price: 2.00
+                step_size: 300
+        last_updated: "2015-06-29T20:39:09Z"
     TariffElement:
       type: object
       description: A Tariff Element consists of Price Components and optional Restrictions.
@@ -272,15 +268,13 @@ components:
           $ref: "#/components/schemas/TariffDimensionType"
         price:
           type: number
-          description: Price per unit (excluding VAT).
-        vat:
-          type: number
-          description: Applicable VAT percentage. If omitted, no VAT is applicable.
+          description: Price per unit (excluding VAT) for this Tariff dimension.
         step_size:
           type: integer
-          description: Minimum amount to be billed. Consumed amounts are rounded up to the
-            smallest multiple of step_size that is at least equal to the
-            consumed amount.
+          description: Minimum amount to be billed. This unit will be billed in this
+            step_size blocks. For example, if type is TIME and step_size is 300,
+            then time will be billed in blocks of 5 minutes; so if 6 minutes are
+            used, 10 minutes (2 blocks of step_size) will be billed.
       additionalProperties: true
     TariffRestrictions:
       type: object
@@ -289,64 +283,53 @@ components:
         start_time:
           type: string
           maxLength: 5
-          pattern: ^[0-2][0-9]:[0-5][0-9]$
-          description: Start time of day in local time (HH:MM).
+          pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+          description: Start time of day, for example 13:30, valid from this time of the
+            day. Must be in 24h format with leading zeros.
         end_time:
           type: string
           maxLength: 5
-          pattern: ^[0-2][0-9]:[0-5][0-9]$
-          description: End time of day in local time (HH:MM).
+          pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
+          description: End time of day, for example 19:45, valid until this time of the
+            day. Same syntax as start_time.
         start_date:
           type: string
           maxLength: 10
           pattern: ^\d{4}-\d{2}-\d{2}$
-          description: Start date in local time (YYYY-MM-DD), inclusive.
+          description: Start date, for example 2015-12-24, valid from this day.
         end_date:
           type: string
           maxLength: 10
           pattern: ^\d{4}-\d{2}-\d{2}$
-          description: End date in local time (YYYY-MM-DD), exclusive.
+          description: End date, for example 2015-12-27, valid until this day (excluding
+            this day).
         min_kwh:
           type: number
-          description: Minimum consumed energy in kWh.
+          description: Minimum used energy in kWh, for example 20, valid from this amount
+            of energy is used.
         max_kwh:
           type: number
-          description: Maximum consumed energy in kWh.
-        min_current:
-          type: number
-          description: Sum of the minimum current (in Amperes) over all phases.
-        max_current:
-          type: number
-          description: Sum of the maximum current (in Amperes) over all phases.
+          description: Maximum used energy in kWh, for example 50, valid until this amount
+            of energy is used.
         min_power:
           type: number
-          description: Minimum power in kW.
+          description: Minimum power in kW, for example 0, valid from this charging speed.
         max_power:
           type: number
-          description: Maximum power in kW.
+          description: Maximum power in kW, for example 20, valid up to this charging
+            speed.
         min_duration:
           type: integer
-          description: Minimum duration in seconds (inclusive).
+          description: Minimum duration in seconds, valid for a duration from x seconds.
         max_duration:
           type: integer
-          description: Maximum duration in seconds (exclusive).
+          description: Maximum duration in seconds, valid for a duration up to x seconds.
         day_of_week:
           type: array
           items:
             $ref: "#/components/schemas/DayOfWeek"
-          description: Which day(s) of the week this TariffElement is active.
-        reservation:
-          $ref: "#/components/schemas/ReservationRestrictionType"
+          description: Which day(s) of the week this Tariff is valid.
       additionalProperties: true
-    TariffType:
-      type: string
-      enum:
-        - AD_HOC_PAYMENT
-        - PROFILE_CHEAP
-        - PROFILE_FAST
-        - PROFILE_GREEN
-        - REGULAR
-      description: Type of tariff.
     TariffDimensionType:
       type: string
       enum:
@@ -367,9 +350,3 @@ components:
         - SATURDAY
         - SUNDAY
       description: Day of the week.
-    ReservationRestrictionType:
-      type: string
-      enum:
-        - RESERVATION
-        - RESERVATION_EXPIRES
-      description: Type of reservation restriction in a TariffElement.

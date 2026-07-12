@@ -96,23 +96,40 @@ paths:
             schema:
               $ref: "#/components/schemas/Session"
             example:
-              country_code: BE
-              party_id: BEC
               id: "101"
-              start_date_time: 2015-06-29T22:39:09Z
-              end_date_time: 2015-06-29T23:50:16Z
+              start_datetime: 2015-06-29T22:39:09Z
+              end_datetime: 2015-06-29T23:50:16Z
               kwh: 41.12
-              cdr_token:
-                country_code: NL
-                party_id: TST
-                uid: 123abc
-                type: RFID
-                contract_id: NL-TST-C12345678-S
+              auth_id: DE8ACC12E46L89
               auth_method: WHITELIST
-              location_id: LOC1
-              evse_uid: "3256"
-              connector_id: "1"
+              location:
+                id: LOC1
+                type: ON_STREET
+                name: Gent Zuid
+                address: F.Rooseveltlaan 3A
+                city: Gent
+                postal_code: "9000"
+                country: BEL
+                coordinates:
+                  latitude: "3.729944"
+                  longitude: "51.047599"
+                evses:
+                  - uid: "3256"
+                    evse_id: BE-BEC-E041503003
+                    status: AVAILABLE
+                    connectors:
+                      - id: "1"
+                        standard: IEC_62196_T2
+                        format: SOCKET
+                        power_type: AC_1_PHASE
+                        voltage: 230
+                        amperage: 64
+                        tariff_id: "11"
+                        last_updated: 2015-06-29T22:39:09Z
+                    last_updated: 2015-06-29T22:39:09Z
+                last_updated: 2015-06-29T22:39:09Z
               currency: EUR
+              total_cost: 2.50
               status: COMPLETED
               last_updated: 2015-06-29T23:50:17Z
       responses:
@@ -135,9 +152,9 @@ paths:
       summary: Partially Update Session (eMSP Interface)
       description: "Push partial updates to a Session. Only fields/objects that need
         to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain last_updated. For
-        charging_periods: acts as a request to add ChargingPeriod objects. To
-        replace or remove charging_periods, use PUT instead."
+        considered unchanged. For charging_periods: acts as a request to add
+        ChargingPeriod objects. To replace or remove charging_periods, use PUT
+        instead."
       tags:
         - Sessions - eMSP Interface
       parameters:
@@ -156,9 +173,7 @@ paths:
             schema:
               $ref: "#/components/schemas/SessionPatch"
             example:
-              total_cost:
-                excl_vat: 0.6
-                incl_vat: 0.66
+              total_cost: 0.60
               last_updated: 2019-06-23T08:11:00Z
       responses:
         "200":
@@ -221,21 +236,21 @@ components:
       additionalProperties: true
     SessionPatch:
       type: object
-      description: Partial Session object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Session object for PATCH. Only the fields that have to be
+        updated need to be present; fields that are not specified are considered
+        unchanged.
       properties:
-        end_date_time:
+        end_datetime:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         kwh:
           type: number
-        cdr_token:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/CdrToken
-        auth_method:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/AuthMethod
-        authorization_reference:
+        auth_id:
           type: string
           maxLength: 36
+        auth_method:
+          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/AuthMethod
+        location:
+          $ref: ./locations.yaml#/components/schemas/Location
         meter_id:
           type: string
           maxLength: 255
@@ -247,7 +262,7 @@ components:
           items:
             $ref: ./shared/schemas/cdrs.yaml#/components/schemas/ChargingPeriod
         total_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          type: number
         status:
           $ref: "#/components/schemas/SessionStatus"
         last_updated:
@@ -255,63 +270,40 @@ components:
       additionalProperties: true
     Session:
       type: object
-      description: Describes one charging session. Does not require energy transfer.
+      description: Describes one charging session.
       required:
-        - country_code
-        - party_id
         - id
-        - start_date_time
+        - start_datetime
         - kwh
-        - cdr_token
+        - auth_id
         - auth_method
-        - location_id
-        - evse_uid
-        - connector_id
+        - location
         - currency
         - status
         - last_updated
       properties:
-        country_code:
-          type: string
-          maxLength: 2
-          description: ISO-3166 alpha-2 country code of the CPO that owns this Session.
-        party_id:
-          type: string
-          maxLength: 3
-          description: ID of the CPO that owns this Session.
         id:
           type: string
           maxLength: 36
-          description: Unique ID of the charging session in the CPO platform.
-        start_date_time:
+          description: The unique id that identifies the session in the CPO platform.
+        start_datetime:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
-        end_date_time:
+        end_datetime:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         kwh:
           type: number
-          description: How many kWh were charged.
-        cdr_token:
-          $ref: ./shared/schemas/cdrs.yaml#/components/schemas/CdrToken
+          description: >-
+            How many kWh are charged. Numbers in OCPI are formatted as JSON
+            numbers; unless mentioned otherwise, numbers use 4 decimals and a
+            sufficiently large amount of digits.
+        auth_id:
+          type: string
+          maxLength: 36
+          description: Reference to a token, identified by the auth_id field of the Token.
         auth_method:
           $ref: ./shared/schemas/cdrs.yaml#/components/schemas/AuthMethod
-        authorization_reference:
-          type: string
-          maxLength: 36
-          description: Reference to the authorization given by the eMSP.
-        location_id:
-          type: string
-          maxLength: 36
-          description: Location.id where the charging session is/was happening.
-        evse_uid:
-          type: string
-          maxLength: 36
-          description: EVSE.uid of the EVSE. Can be '#NA' for reservation without assigned
-            EVSE.
-        connector_id:
-          type: string
-          maxLength: 36
-          description: Connector.id of the Connector. Can be '#NA' for reservation without
-            assigned connector.
+        location:
+          $ref: ./locations.yaml#/components/schemas/Location
         meter_id:
           type: string
           maxLength: 255
@@ -319,14 +311,21 @@ components:
         currency:
           type: string
           maxLength: 3
-          description: ISO-4217 code of the currency used for this session.
+          description: ISO 4217 code of the currency used for this session.
         charging_periods:
           type: array
           items:
             $ref: ./shared/schemas/cdrs.yaml#/components/schemas/ChargingPeriod
-          description: List of Charging Periods to calculate/verify total cost.
+          description: An optional list of charging periods that can be used to
+            calculate and verify the total cost.
         total_cost:
-          $ref: ./shared/schemas/types.yaml#/components/schemas/Price
+          type: number
+          description: >-
+            The total cost (excluding VAT) of the session in the specified
+            currency. This is the price that the eMSP will have to pay to the
+            CPO. A total_cost of 0.00 means free of charge. When omitted, no
+            price information is given in the Session object, this does not have
+            to mean it is free of charge.
         status:
           $ref: "#/components/schemas/SessionStatus"
         last_updated:
@@ -339,5 +338,4 @@ components:
         - COMPLETED
         - INVALID
         - PENDING
-        - RESERVATION
       description: The status of a charging session.

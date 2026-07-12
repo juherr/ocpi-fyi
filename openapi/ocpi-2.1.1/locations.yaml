@@ -58,7 +58,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested Location object.
@@ -83,13 +83,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested EVSE object.
@@ -114,13 +114,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -153,7 +153,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested Location object.
@@ -179,7 +179,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -187,19 +187,17 @@ paths:
             schema:
               $ref: "#/components/schemas/Location"
             example:
-              country_code: NL
-              party_id: ALF
-              id: 3e7b39c2-10d0-4138-a8b3-8509a25f9920
-              publish: true
-              name: ihomer
-              address: Tamboerijn 7
-              city: Etten-Leur
-              postal_code: 4876 BS
-              country: NLD
+              id: LOC1
+              type: ON_STREET
+              name: Gent Zuid
+              address: F.Rooseveltlaan 3A
+              city: Gent
+              postal_code: "9000"
+              country: BEL
               coordinates:
-                latitude: "51.562787"
-                longitude: "4.638975"
-              time_zone: Europe/Amsterdam
+                latitude: "51.047599"
+                longitude: "3.729944"
+              time_zone: Europe/Brussels
               last_updated: 2019-07-01T12:12:11Z
       responses:
         "200":
@@ -221,7 +219,7 @@ paths:
       summary: Partially Update Location (eMSP Interface)
       description: Push partial updates to a Location object. Only fields/objects that
         need to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
       tags:
         - Locations - eMSP Interface
       parameters:
@@ -232,7 +230,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -266,13 +264,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested EVSE object.
@@ -299,13 +297,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -321,8 +319,8 @@ paths:
                   standard: IEC_62196_T2
                   format: SOCKET
                   power_type: AC_3_PHASE
-                  max_voltage: 220
-                  max_amperage: 16
+                  voltage: 220
+                  amperage: 16
                   last_updated: 2019-07-01T12:12:11Z
               last_updated: 2019-07-01T12:12:11Z
       responses:
@@ -345,7 +343,7 @@ paths:
       summary: Partially Update EVSE (eMSP Interface)
       description: Push partial updates to an EVSE. Only fields/objects that need to
         be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
         The Receiver SHALL update last_updated on the parent Location.
       tags:
         - Locations - eMSP Interface
@@ -357,13 +355,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -397,13 +395,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -436,13 +434,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -460,8 +458,8 @@ paths:
               standard: IEC_62196_T2
               format: SOCKET
               power_type: AC_3_PHASE
-              max_voltage: 220
-              max_amperage: 16
+              voltage: 220
+              amperage: 16
               last_updated: 2019-07-01T12:12:11Z
       responses:
         "200":
@@ -483,7 +481,7 @@ paths:
       summary: Partially Update Connector (eMSP Interface)
       description: Push partial updates to a Connector. Only fields/objects that need
         to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
         The Receiver SHALL update last_updated on the parent EVSE and Location.
       tags:
         - Locations - eMSP Interface
@@ -495,13 +493,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -515,8 +513,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ConnectorPatch"
             example:
-              tariff_ids:
-                - "15"
+              tariff_id: "15"
               last_updated: 2019-06-24T12:39:09Z
       responses:
         "200":
@@ -619,10 +616,15 @@ components:
       additionalProperties: true
     LocationPatch:
       type: object
-      description: Partial Location object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Location object for PATCH. Only the fields that have to
+        be updated need to be present; fields that are not specified are
+        considered unchanged.
       properties:
+        id:
+          type: string
+          maxLength: 39
+        type:
+          $ref: "#/components/schemas/LocationType"
         name:
           type: string
           maxLength: 255
@@ -635,9 +637,6 @@ components:
         postal_code:
           type: string
           maxLength: 10
-        state:
-          type: string
-          maxLength: 20
         country:
           type: string
           maxLength: 3
@@ -647,8 +646,6 @@ components:
           type: array
           items:
             $ref: ./shared/schemas/locations.yaml#/components/schemas/AdditionalGeoLocation
-        parking_type:
-          $ref: "#/components/schemas/ParkingType"
         evses:
           type: array
           items:
@@ -680,24 +677,18 @@ components:
             $ref: ./shared/schemas/locations.yaml#/components/schemas/Image
         energy_mix:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/EnergyMix
-        publish:
-          type: boolean
-        publish_allowed_to:
-          type: array
-          items:
-            $ref: "#/components/schemas/PublishTokenType"
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
     EvsePatch:
       type: object
-      description: Partial EVSE object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial EVSE object for PATCH. Only the fields that have to be
+        updated need to be present; fields that are not specified are considered
+        unchanged.
       properties:
         uid:
           type: string
-          maxLength: 36
+          maxLength: 39
         evse_id:
           type: string
           maxLength: 48
@@ -740,9 +731,9 @@ components:
       additionalProperties: true
     ConnectorPatch:
       type: object
-      description: Partial Connector object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Connector object for PATCH. Only the fields that have to
+        be updated need to be present; fields that are not specified are
+        considered unchanged.
       properties:
         id:
           type: string
@@ -753,17 +744,13 @@ components:
           $ref: "#/components/schemas/ConnectorFormat"
         power_type:
           $ref: "#/components/schemas/PowerType"
-        max_voltage:
+        voltage:
           type: integer
-        max_amperage:
+        amperage:
           type: integer
-        max_electric_power:
-          type: integer
-        tariff_ids:
-          type: array
-          items:
-            type: string
-            maxLength: 36
+        tariff_id:
+          type: string
+          maxLength: 36
         terms_and_conditions:
           type: string
           format: uri
@@ -776,38 +763,23 @@ components:
       description: The Location object describes the location and its properties where
         a group of EVSEs that belong together are installed.
       required:
-        - country_code
-        - party_id
         - id
-        - publish
+        - type
         - address
         - city
+        - postal_code
         - country
         - coordinates
-        - time_zone
         - last_updated
       properties:
-        country_code:
-          type: string
-          maxLength: 2
-          description: ISO-3166 alpha-2 country code of the CPO that owns this Location.
-        party_id:
-          type: string
-          maxLength: 3
-          description: ID of the CPO that owns this Location.
         id:
           type: string
-          maxLength: 36
-          description: Uniquely identifies the location within the CPO's platform.
-        publish:
-          type: boolean
-          description: Whether this Location may be published on a website or app.
-        publish_allowed_to:
-          type: array
-          items:
-            $ref: "#/components/schemas/PublishTokenType"
-          description: Only used when publish is false. Tokens listed are allowed to be
-            shown this Location.
+          maxLength: 39
+          description: Uniquely identifies the location within the CPO's platform (and
+            suboperator platforms). This field can never be changed, modified or
+            renamed.
+        type:
+          $ref: "#/components/schemas/LocationType"
         name:
           type: string
           maxLength: 255
@@ -824,14 +796,10 @@ components:
           type: string
           maxLength: 10
           description: Postal code of the location.
-        state:
-          type: string
-          maxLength: 20
-          description: State or province of the location.
         country:
           type: string
           maxLength: 3
-          description: ISO 3166-1 alpha-3 code for the country.
+          description: ISO 3166-1 alpha-3 code for the country of this location.
         coordinates:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/GeoLocation
         related_locations:
@@ -839,8 +807,6 @@ components:
           items:
             $ref: ./shared/schemas/locations.yaml#/components/schemas/AdditionalGeoLocation
           description: Geographical locations of related points relevant to the user.
-        parking_type:
-          $ref: "#/components/schemas/ParkingType"
         evses:
           type: array
           items:
@@ -861,23 +827,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Facility"
-          description: Optional list of facilities this charging location directly belongs
+          description: Optional list of facilities this charge location directly belongs
             to.
         time_zone:
           type: string
           maxLength: 255
-          description: IANA TZ-value representing the time zone of the location.
+          description: One of IANA tzdata's TZ-values representing the time zone of the
+            location. Examples "Europe/Oslo", "Europe/Zurich".
         opening_times:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/Hours
         charging_when_closed:
           type: boolean
-          description: Indicates if the EVSEs are still charging outside the opening
-            hours. Default is true.
+          description: >-
+            Indicates if the EVSEs are still charging outside the opening hours
+            of the location. E.g. when the parking garage closes its barriers
+            over night, is it allowed to charge till the next morning?
+            Default: true
         images:
           type: array
           items:
             $ref: ./shared/schemas/locations.yaml#/components/schemas/Image
-          description: Links to images related to the location.
+          description: Links to images related to the location such as photos or logos.
         energy_mix:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/EnergyMix
         last_updated:
@@ -885,9 +855,17 @@ components:
       additionalProperties: true
     EVSE:
       type: object
-      description: The EVSE object describes the part of a Charging Station that
-        controls one or more Connectors. For each EVSE, a set of Connectors is
-        given.
+      description: >-
+        The EVSE object describes the part that controls the power supply to a
+        single EV in a single session. It always belongs to a Location object.
+        It will only contain directions to get from the location to the EVSE
+        (i.e. floor, physical_reference or directions). When these properties
+        are insufficient to reach the EVSE from the Location point, then it
+        typically indicates that this EVSE should be put in a different Location
+        object (sometimes with the same address but with different
+        coordinates/directions). An EVSE object has a list of connectors which
+        can not be used simultaneously: only one connector per EVSE can be used
+        at the time.
       required:
         - uid
         - status
@@ -896,9 +874,13 @@ components:
       properties:
         uid:
           type: string
-          maxLength: 36
-          description: Uniquely identifies the EVSE within the CPO's platform (not the
-            eMI3 EVSE ID).
+          maxLength: 39
+          description: >-
+            Uniquely identifies the EVSE within the CPOs platform (and
+            suboperator platforms). For example a database unique ID or the
+            "EVSE ID". This field can never be changed, modified or renamed.
+            This is the 'technical' identification of the EVSE, not to be used
+            as 'human readable' identification, use the field: evse_id for that.
         evse_id:
           type: string
           maxLength: 48
@@ -909,7 +891,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/StatusSchedule"
-          description: Indicates a planned status update of the EVSE.
+          description: Indicates a planned status in the future of the EVSE.
         capabilities:
           type: array
           items:
@@ -924,7 +906,8 @@ components:
         floor_level:
           type: string
           maxLength: 4
-          description: Level on which the Charge Point is located (in garage buildings).
+          description: Level on which the charging station is located (in garage
+            buildings) in the locally displayed numbering scheme.
         coordinates:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/GeoLocation
         physical_reference:
@@ -936,58 +919,60 @@ components:
           type: array
           items:
             $ref: ./shared/schemas/types.yaml#/components/schemas/DisplayText
-          description: Multi-language human-readable directions to find the EVSE.
+          description: Multi-language human-readable directions when more detailed
+            information on how to reach the EVSE from the Location is required.
         parking_restrictions:
           type: array
           items:
             $ref: "#/components/schemas/ParkingRestriction"
-          description: Restrictions that apply to the parking spot.
+          description: The restrictions that apply to the parking spot.
         images:
           type: array
           items:
             $ref: ./shared/schemas/locations.yaml#/components/schemas/Image
-          description: Links to images related to the EVSE.
+          description: Links to images related to the EVSE such as photos or logos.
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
     Connector:
       type: object
-      description: A connector is the socket or cable and plug available for the EV to use.
+      description: >-
+        A connector is the socket or cable available for the EV to use. A single
+        EVSE may provide multiple connectors but only one of them can be in use
+        at the same time. A connector always belongs to an EVSE object.
       required:
         - id
         - standard
         - format
         - power_type
-        - max_voltage
-        - max_amperage
+        - voltage
+        - amperage
         - last_updated
       properties:
         id:
           type: string
           maxLength: 36
-          description: Identifier of the Connector within the EVSE.
+          description: Identifier of the connector within the EVSE. Two connectors may
+            have the same id as long as they do not belong to the same EVSE object.
         standard:
           $ref: "#/components/schemas/ConnectorType"
         format:
           $ref: "#/components/schemas/ConnectorFormat"
         power_type:
           $ref: "#/components/schemas/PowerType"
-        max_voltage:
+        voltage:
           type: integer
-          description: Maximum voltage of the connector (line to neutral) in Volts [V].
-        max_amperage:
+          description: Voltage of the connector (line to neutral for AC_3_PHASE), in
+            volt [V].
+        amperage:
           type: integer
-          description: Maximum amperage of the connector in Amperes [A].
-        max_electric_power:
-          type: integer
-          description: Maximum electric power that can be delivered by this connector in
-            Watts [W].
-        tariff_ids:
-          type: array
-          items:
-            type: string
-            maxLength: 36
-          description: Identifiers of the currently valid charging tariffs.
+          description: Maximum amperage of the connector, in ampere [A].
+        tariff_id:
+          type: string
+          maxLength: 36
+          description: Identifier of the current charging tariff structure. For a "Free
+            of Charge" tariff this field should be set, and point to a defined
+            "Free of Charge" tariff.
         terms_and_conditions:
           type: string
           format: uri
@@ -995,30 +980,6 @@ components:
           description: URL to the operator's terms and conditions.
         last_updated:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
-      additionalProperties: true
-    PublishTokenType:
-      type: object
-      description: Defines the set of token properties used to identify tokens allowed
-        to view a Location.
-      properties:
-        uid:
-          type: string
-          maxLength: 36
-          description: Unique token identifier.
-        type:
-          $ref: ./shared/schemas/tokens.yaml#/components/schemas/TokenType
-        visual_number:
-          type: string
-          maxLength: 64
-          description: Visual number printed on the token.
-        issuer:
-          type: string
-          maxLength: 64
-          description: Issuing company name.
-        group_id:
-          type: string
-          maxLength: 36
-          description: Token group identifier.
       additionalProperties: true
     StatusSchedule:
       type: object
@@ -1052,17 +1013,10 @@ components:
         - type: string
           enum:
             - CHARGING_PROFILE_CAPABLE
-            - CHARGING_PREFERENCES_CAPABLE
-            - CHIP_CARD_SUPPORT
-            - CONTACTLESS_CARD_SUPPORT
             - CREDIT_CARD_PAYABLE
-            - DEBIT_CARD_PAYABLE
-            - PED_TERMINAL
             - REMOTE_START_STOP_CAPABLE
             - RESERVABLE
             - RFID_READER
-            - START_SESSION_CONNECTOR_REQUIRED
-            - TOKEN_GROUP_CAPABLE
             - UNLOCK_CAPABLE
         - type: string
       description: The capabilities of an EVSE.
@@ -1077,7 +1031,6 @@ components:
         - type: string
           enum:
             - CHADEMO
-            - CHAOJI
             - DOMESTIC_A
             - DOMESTIC_B
             - DOMESTIC_C
@@ -1090,11 +1043,6 @@ components:
             - DOMESTIC_J
             - DOMESTIC_K
             - DOMESTIC_L
-            - DOMESTIC_M
-            - DOMESTIC_N
-            - DOMESTIC_O
-            - GBT_AC
-            - GBT_DC
             - IEC_60309_2_single_16
             - IEC_60309_2_three_16
             - IEC_60309_2_three_32
@@ -1105,15 +1053,6 @@ components:
             - IEC_62196_T2_COMBO
             - IEC_62196_T3A
             - IEC_62196_T3C
-            - NEMA_5_20
-            - NEMA_6_30
-            - NEMA_6_50
-            - NEMA_10_30
-            - NEMA_10_50
-            - NEMA_14_30
-            - NEMA_14_50
-            - PANTOGRAPH_BOTTOM_UP
-            - PANTOGRAPH_TOP_DOWN
             - TESLA_R
             - TESLA_S
         - type: string
@@ -1122,23 +1061,19 @@ components:
       type: string
       enum:
         - AC_1_PHASE
-        - AC_2_PHASE
-        - AC_2_PHASE_SPLIT
         - AC_3_PHASE
         - DC
       description: AC or DC power type.
-    ParkingType:
-      anyOf:
-        - type: string
-          enum:
-            - ALONG_MOTORWAY
-            - PARKING_GARAGE
-            - PARKING_LOT
-            - ON_DRIVEWAY
-            - ON_STREET
-            - UNDERGROUND_GARAGE
-        - type: string
-      description: The general type of parking at this location.
+    LocationType:
+      type: string
+      enum:
+        - ON_STREET
+        - PARKING_GARAGE
+        - UNDERGROUND_GARAGE
+        - PARKING_LOT
+        - OTHER
+        - UNKNOWN
+      description: Reflects the general type of the charge point's location.
     ParkingRestriction:
       anyOf:
         - type: string
@@ -1163,14 +1098,10 @@ components:
             - RECREATION_AREA
             - NATURE
             - MUSEUM
-            - BIKE_SHARING
             - BUS_STOP
             - TAXI_STAND
-            - TRAM_STOP
-            - METRO_STATION
             - TRAIN_STATION
             - AIRPORT
-            - PARKING_LOT
             - CARPOOL_PARKING
             - FUEL_STATION
             - WIFI
