@@ -145,27 +145,16 @@ components:
       description: Information about a supported OCPI endpoint.
       required:
         - identifier
-        - role
         - url
       properties:
         identifier:
           $ref: "#/components/schemas/ModuleID"
-        role:
-          $ref: "#/components/schemas/InterfaceRole"
         url:
           type: string
           format: uri
           maxLength: 255
           description: URL to the endpoint.
       additionalProperties: true
-    InterfaceRole:
-      type: string
-      enum:
-        - SENDER
-        - RECEIVER
-      description: The role of an interface. SENDER is implemented by the owner of
-        data (for Pull). RECEIVER is implemented by the receiver of data (for
-        Push).
     ModuleID:
       anyOf:
         - type: string
