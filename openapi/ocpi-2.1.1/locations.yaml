@@ -838,8 +838,11 @@ components:
           $ref: ./shared/schemas/locations.yaml#/components/schemas/Hours
         charging_when_closed:
           type: boolean
-          description: Indicates if the EVSEs are still charging outside the opening
-            hours of the location. Default is true.
+          description: >-
+            Indicates if the EVSEs are still charging outside the opening hours
+            of the location. E.g. when the parking garage closes its barriers
+            over night, is it allowed to charge till the next morning?
+            Default: true
         images:
           type: array
           items:
@@ -852,8 +855,17 @@ components:
       additionalProperties: true
     EVSE:
       type: object
-      description: The EVSE object describes the part that controls the power supply to
-        a single EV in a single session. It always belongs to a Location object.
+      description: >-
+        The EVSE object describes the part that controls the power supply to a
+        single EV in a single session. It always belongs to a Location object.
+        It will only contain directions to get from the location to the EVSE
+        (i.e. floor, physical_reference or directions). When these properties
+        are insufficient to reach the EVSE from the Location point, then it
+        typically indicates that this EVSE should be put in a different Location
+        object (sometimes with the same address but with different
+        coordinates/directions). An EVSE object has a list of connectors which
+        can not be used simultaneously: only one connector per EVSE can be used
+        at the time.
       required:
         - uid
         - status
@@ -863,10 +875,12 @@ components:
         uid:
           type: string
           maxLength: 39
-          description: Uniquely identifies the EVSE within the CPO's platform (and
-            suboperator platforms). This is the 'technical' identification of the
-            EVSE, not to be used as 'human readable' identification (use evse_id
-            for that).
+          description: >-
+            Uniquely identifies the EVSE within the CPOs platform (and
+            suboperator platforms). For example a database unique ID or the
+            "EVSE ID". This field can never be changed, modified or renamed.
+            This is the 'technical' identification of the EVSE, not to be used
+            as 'human readable' identification, use the field: evse_id for that.
         evse_id:
           type: string
           maxLength: 48
@@ -922,9 +936,10 @@ components:
       additionalProperties: true
     Connector:
       type: object
-      description: A connector is the socket or cable available for the EV to use. A
-        single EVSE may provide multiple connectors but only one of them can be in
-        use at the same time.
+      description: >-
+        A connector is the socket or cable available for the EV to use. A single
+        EVSE may provide multiple connectors but only one of them can be in use
+        at the same time. A connector always belongs to an EVSE object.
       required:
         - id
         - standard

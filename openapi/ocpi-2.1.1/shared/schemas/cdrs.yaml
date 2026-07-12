@@ -7,8 +7,10 @@ components:
   schemas:
     ChargingPeriod:
       type: object
-      description: A Charging Period is a group of dimension values for a period of
-        time during a charging session.
+      description: >-
+        A charging period consists of a start timestamp and a list of possible
+        values that influence this period, for example: Amount of energy charged
+        this period, maximum current during this period etc.
       required:
         - start_date_time
         - dimensions

@@ -151,10 +151,14 @@ components:
       additionalProperties: true
     CDR:
       type: object
-      description: The CDR object describes the Charging Session and its costs, how
-        these costs are built up, etc. A Charge Detail Record is the description of a
-        concluded charging session. Once sent to the eMSP, a CDR cannot be changed or
-        replaced.
+      description: >-
+        A Charge Detail Record is the description of a concluded charging
+        session. The CDR is the only billing-relevant object. CDRs are sent from
+        the CPO to the eMSP after the charging session has ended. There is no
+        requirement to send CDRs semi-realtime, it is seen as good practice to
+        send them as soon as possible. But if there is an agreement between
+        parties to send them for example once a month, that is also allowed by
+        OCPI.
       required:
         - id
         - start_date_time

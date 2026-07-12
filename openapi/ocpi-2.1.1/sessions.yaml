@@ -292,7 +292,10 @@ components:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         kwh:
           type: number
-          description: How many kWh are charged.
+          description: >-
+            How many kWh are charged. Numbers in OCPI are formatted as JSON
+            numbers; unless mentioned otherwise, numbers use 4 decimals and a
+            sufficiently large amount of digits.
         auth_id:
           type: string
           maxLength: 36
@@ -317,8 +320,12 @@ components:
             calculate and verify the total cost.
         total_cost:
           type: number
-          description: The total cost (excluding VAT) of the session in the specified
-            currency.
+          description: >-
+            The total cost (excluding VAT) of the session in the specified
+            currency. This is the price that the eMSP will have to pay to the
+            CPO. A total_cost of 0.00 means free of charge. When omitted, no
+            price information is given in the Session object, this does not have
+            to mean it is free of charge.
         status:
           $ref: "#/components/schemas/SessionStatus"
         last_updated:
