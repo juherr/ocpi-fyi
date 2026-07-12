@@ -191,10 +191,10 @@ components:
       description: >-
         A Tariff Object consists of a list of one or more TariffElements, these
         elements can be used to create complex Tariff structures. When the list
-        of elements contains more then 1 element, than the first tariff in the
+        of elements contains more than 1 element, then the first tariff in the
         list with matching restrictions will be used. It is advised to always
         set a "default" tariff, the last tariff in the list of elements with no
-        restriction. This acts as a fallback when non of the TariffElements
+        restriction. This acts as a fallback when none of the TariffElements
         before this matches the current charging period.
       required:
         - id

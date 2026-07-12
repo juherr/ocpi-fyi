@@ -122,8 +122,12 @@ paths:
     put:
       operationId: putReceiverToken
       summary: Push Token (CPO Interface)
-      description: Push a new or updated Token object to the CPO. The URL parameters
-        country_code and party_id identify the eMSP that owns the Token.
+      description: >-
+        Push a new or updated Token object to the CPO. The URL parameters
+        country_code and party_id identify the eMSP that owns the Token, and the
+        URL token_uid MUST match the uid of the Token object in the request
+        body. If they differ, the CPO SHOULD respond with OCPI status 2001
+        (Invalid or missing parameters).
       tags:
         - Tokens - CPO Interface
       parameters:
@@ -285,9 +289,9 @@ components:
       additionalProperties: true
     TokenPatch:
       type: object
-      description: Partial Token object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Token object for PATCH. Only the fields that have to be
+        updated need to be present; fields that are not specified are considered
+        unchanged.
       properties:
         uid:
           type: string

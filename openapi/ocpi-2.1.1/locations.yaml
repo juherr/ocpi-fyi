@@ -58,7 +58,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested Location object.
@@ -83,13 +83,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested EVSE object.
@@ -114,13 +114,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -153,7 +153,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested Location object.
@@ -179,7 +179,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -230,7 +230,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -264,13 +264,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       responses:
         "200":
           description: The requested EVSE object.
@@ -297,13 +297,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -355,13 +355,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
       requestBody:
         required: true
         content:
@@ -395,13 +395,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -434,13 +434,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
@@ -493,13 +493,13 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: evse_uid
           in: path
           required: true
           schema:
             type: string
-            maxLength: 36
+            maxLength: 39
         - name: connector_id
           in: path
           required: true
