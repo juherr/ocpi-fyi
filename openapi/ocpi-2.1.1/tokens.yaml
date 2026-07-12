@@ -180,8 +180,7 @@ paths:
       summary: Partially Update Token (CPO Interface)
       description: Push partial updates to a Token. Only fields that need to be
         updated have to be present, fields not specified are considered
-        unchanged. The request MUST contain last_updated. Tokens cannot be
-        deleted; use PUT or PATCH to invalidate.
+        unchanged. Tokens cannot be deleted; use PUT or PATCH to invalidate.
       tags:
         - Tokens - CPO Interface
       parameters:

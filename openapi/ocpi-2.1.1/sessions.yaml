@@ -152,9 +152,9 @@ paths:
       summary: Partially Update Session (eMSP Interface)
       description: "Push partial updates to a Session. Only fields/objects that need
         to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain last_updated. For
-        charging_periods: acts as a request to add ChargingPeriod objects. To
-        replace or remove charging_periods, use PUT instead."
+        considered unchanged. For charging_periods: acts as a request to add
+        ChargingPeriod objects. To replace or remove charging_periods, use PUT
+        instead."
       tags:
         - Sessions - eMSP Interface
       parameters:
@@ -236,9 +236,9 @@ components:
       additionalProperties: true
     SessionPatch:
       type: object
-      description: Partial Session object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Session object for PATCH. Only the fields that have to be
+        updated need to be present; fields that are not specified are considered
+        unchanged.
       properties:
         end_datetime:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime

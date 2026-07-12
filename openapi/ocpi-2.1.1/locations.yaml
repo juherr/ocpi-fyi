@@ -219,7 +219,7 @@ paths:
       summary: Partially Update Location (eMSP Interface)
       description: Push partial updates to a Location object. Only fields/objects that
         need to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
       tags:
         - Locations - eMSP Interface
       parameters:
@@ -343,7 +343,7 @@ paths:
       summary: Partially Update EVSE (eMSP Interface)
       description: Push partial updates to an EVSE. Only fields/objects that need to
         be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
         The Receiver SHALL update last_updated on the parent Location.
       tags:
         - Locations - eMSP Interface
@@ -481,7 +481,7 @@ paths:
       summary: Partially Update Connector (eMSP Interface)
       description: Push partial updates to a Connector. Only fields/objects that need
         to be updated have to be present; fields/objects not specified are
-        considered unchanged. The request MUST contain the last_updated field.
+        considered unchanged.
         The Receiver SHALL update last_updated on the parent EVSE and Location.
       tags:
         - Locations - eMSP Interface
@@ -616,9 +616,9 @@ components:
       additionalProperties: true
     LocationPatch:
       type: object
-      description: Partial Location object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Location object for PATCH. Only the fields that have to
+        be updated need to be present; fields that are not specified are
+        considered unchanged.
       properties:
         id:
           type: string
@@ -682,9 +682,9 @@ components:
       additionalProperties: true
     EvsePatch:
       type: object
-      description: Partial EVSE object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial EVSE object for PATCH. Only the fields that have to be
+        updated need to be present; fields that are not specified are considered
+        unchanged.
       properties:
         uid:
           type: string
@@ -731,9 +731,9 @@ components:
       additionalProperties: true
     ConnectorPatch:
       type: object
-      description: Partial Connector object for PATCH. MUST contain last_updated.
-      required:
-        - last_updated
+      description: Partial Connector object for PATCH. Only the fields that have to
+        be updated need to be present; fields that are not specified are
+        considered unchanged.
       properties:
         id:
           type: string
