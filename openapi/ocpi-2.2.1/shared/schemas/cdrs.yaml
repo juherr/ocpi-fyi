@@ -19,10 +19,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the eMSP that owns this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that owns this Token.
         uid:
@@ -79,6 +81,7 @@ components:
           description: State or province.
         country:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO 3166-1 alpha-3 country code.
         coordinates:
@@ -198,6 +201,10 @@ components:
         - AUTH_REQUEST
         - COMMAND
         - WHITELIST
+      x-enumDescriptions:
+        "AUTH_REQUEST": "Authentication request has been sent to the eMSP."
+        "COMMAND": "Command like StartSession or ReserveNow used to start the Session, the Token provided in the Command was used as authorization."
+        "WHITELIST": "Whitelist used for authentication, no request to the eMSP has been performed."
       description: Method used to authenticate a charging session.
 
     CdrDimensionType:
@@ -216,4 +223,18 @@ components:
         - RESERVATION_TIME
         - STATE_OF_CHARGE
         - TIME
+      x-enumDescriptions:
+        "CURRENT": "(Session Only) Average charging current during this ChargingPeriod: defined in A (Ampere). When negative, the current is flowing from the EV to the grid."
+        "ENERGY": "Total amount of energy (dis-)charged during this ChargingPeriod: defined in kWh. When negative, more energy was fed into the grid than charged into the EV. Default step_size is 1."
+        "ENERGY_EXPORT": "(Session Only) Total amount of energy fed back into the grid: defined in kWh."
+        "ENERGY_IMPORT": "(Session Only) Total amount of energy charged, defined in kWh."
+        "MAX_CURRENT": "Sum of the maximum current over all phases, reached during this ChargingPeriod: defined in A (Ampere)."
+        "MIN_CURRENT": "Sum of the minimum current over all phases, reached during this ChargingPeriod, when negative, current has flowed from the EV to the grid. Defined in A (Ampere)."
+        "MAX_POWER": "Maximum power reached during this ChargingPeriod: defined in kW (Kilowatt)."
+        "MIN_POWER": "Minimum power reached during this ChargingPeriod: defined in kW (Kilowatt), when negative, the power has flowed from the EV to the grid."
+        "PARKING_TIME": "Time during this ChargingPeriod not charging: defined in hours, default step_size multiplier is 1 second."
+        "POWER": "(Session Only) Average power during this ChargingPeriod: defined in kW (Kilowatt). When negative, the power is flowing from the EV to the grid."
+        "RESERVATION_TIME": "Time during this ChargingPeriod the Charge Point has been reserved and not yet been in use for this customer: defined in hours, default step_size multiplier is 1 second."
+        "STATE_OF_CHARGE": "(Session Only) Current state of charge of the EV, in percentage, values allowed: 0 to 100."
+        "TIME": "Time charging during this ChargingPeriod: defined in hours, default step_size multiplier is 1 second."
       description: Types of CDR dimensions.

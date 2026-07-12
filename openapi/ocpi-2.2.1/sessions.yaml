@@ -342,6 +342,8 @@ components:
       required:
       - last_updated
       properties:
+        start_date_time:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         end_date_time:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         kwh:
@@ -356,8 +358,18 @@ components:
         meter_id:
           type: string
           maxLength: 255
+        location_id:
+          type: string
+          maxLength: 36
+        evse_uid:
+          type: string
+          maxLength: 36
+        connector_id:
+          type: string
+          maxLength: 36
         currency:
           type: string
+          minLength: 3
           maxLength: 3
         charging_periods:
           type: array
@@ -390,10 +402,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that owns this Session.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that owns this Session.
         id:
@@ -435,6 +449,7 @@ components:
           description: Optional identification of the kWh meter.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency used for this session.
         charging_periods:
@@ -475,6 +490,12 @@ components:
       - INVALID
       - PENDING
       - RESERVATION
+      x-enumDescriptions:
+        "ACTIVE": "The session has been accepted and is active. All pre-conditions were met: Communication between EV and EVSE (for example: cable plugged in correctly), EV or driver is authorized. EV is being charged, or can be charged. Energy is, or is not, being transfered."
+        "COMPLETED": "The session has been finished successfully. No more modifications will be made to the Session object using this state."
+        "INVALID": "The Session object using this state is declared invalid and will not be billed."
+        "PENDING": "The session is pending, it has not yet started. Not all pre-conditions are met. This is the initial state. The session might never become an active session."
+        "RESERVATION": "The session is started due to a reservation, charging has not yet started. The session might never become an active session."
       description: The status of a charging session.
     ProfileType:
       type: string
@@ -483,6 +504,11 @@ components:
       - FAST
       - GREEN
       - REGULAR
+      x-enumDescriptions:
+        "CHEAP": "Driver wants to use the cheapest charging profile possible."
+        "FAST": "Driver wants his EV charged as quickly as possible and is willing to pay a premium for this, if needed."
+        "GREEN": "Driver wants his EV charged with as much regenerative (green) energy as possible."
+        "REGULAR": "Driver does not have special preferences."
       description: Type of smart charging profile selected by the driver.
     ChargingPreferencesResponse:
       type: string
@@ -492,4 +518,10 @@ components:
       - ENERGY_NEED_REQUIRED
       - NOT_POSSIBLE
       - PROFILE_TYPE_NOT_SUPPORTED
+      x-enumDescriptions:
+        "ACCEPTED": "Charging Preferences accepted, EVSE will try to accomplish them, although this is no guarantee that they will be fulfilled."
+        "DEPARTURE_REQUIRED": "CPO requires departure_time to be able to perform Charging Preference based Smart Charging."
+        "ENERGY_NEED_REQUIRED": "CPO requires energy_need to be able to perform Charging Preference based Smart Charging."
+        "NOT_POSSIBLE": "Charging Preferences contain a demand that the EVSE knows it cannot fulfill."
+        "PROFILE_TYPE_NOT_SUPPORTED": "profile_type contains a value that is not supported by the EVSE."
       description: Response to a PUT Charging Preferences request.

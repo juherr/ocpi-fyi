@@ -629,6 +629,11 @@ components:
       - REJECTED
       - ACCEPTED
       - UNKNOWN_SESSION
+      x-enumDescriptions:
+        "NOT_SUPPORTED": "The requested command is not supported by this CPO, Charge Point, EVSE etc."
+        "REJECTED": "Command request rejected by the CPO. (Session might not be from a customer of the eMSP that sent this request)"
+        "ACCEPTED": "Command request accepted by the CPO."
+        "UNKNOWN_SESSION": "The Session in the requested command is not known by this CPO."
       description: Response from the CPO on the command request.
     CommandResultType:
       type: string
@@ -642,4 +647,14 @@ components:
       - REJECTED
       - TIMEOUT
       - UNKNOWN_RESERVATION
+      x-enumDescriptions:
+        "ACCEPTED": "Command request accepted by the Charge Point."
+        "CANCELED_RESERVATION": "The Reservation has been canceled by the CPO."
+        "EVSE_OCCUPIED": "EVSE is currently occupied, another session is ongoing. Cannot start a new session."
+        "EVSE_INOPERATIVE": "EVSE is currently inoperative or faulted."
+        "FAILED": "Execution of the command failed at the Charge Point."
+        "NOT_SUPPORTED": "The requested command is not supported by this Charge Point, EVSE etc."
+        "REJECTED": "Command request rejected by the Charge Point."
+        "TIMEOUT": "Command request timeout, no response received from the Charge Point in a reasonable time."
+        "UNKNOWN_RESERVATION": "The Reservation in the requested command is not known by this Charge Point."
       description: Result of the command as reported by the Charge Point.

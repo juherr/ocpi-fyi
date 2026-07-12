@@ -563,6 +563,9 @@ components:
       enum:
       - W
       - A
+      x-enumDescriptions:
+        "W": "Watts (power). This is the total allowed charging power. It is usually more convenient to use this for DC charging."
+        "A": "Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more convenient to use this for AC charging."
       description: 'Unit of measure for charging rate: W (Watts) or A (Amperes per
         phase).'
     ChargingProfileResponseType:
@@ -573,6 +576,12 @@ components:
       - REJECTED
       - TOO_OFTEN
       - UNKNOWN_SESSION
+      x-enumDescriptions:
+        "ACCEPTED": "ChargingProfile request accepted by the CPO, request will be forwarded to the EVSE."
+        "NOT_SUPPORTED": "The ChargingProfiles not supported by this CPO, Charge Point, EVSE etc."
+        "REJECTED": "ChargingProfile request rejected by the CPO. (Session might not be from a customer of the eMSP that sent this request)"
+        "TOO_OFTEN": "ChargingProfile request rejected by the CPO, requests are sent more often than allowed."
+        "UNKNOWN_SESSION": "The Session in the requested command is not known by this CPO."
       description: Response from CPO on a charging profile request.
     ChargingProfileResultType:
       type: string
@@ -580,4 +589,8 @@ components:
       - ACCEPTED
       - REJECTED
       - UNKNOWN
+      x-enumDescriptions:
+        "ACCEPTED": "ChargingProfile request accepted by the EVSE."
+        "REJECTED": "ChargingProfile request rejected by the EVSE."
+        "UNKNOWN": "No Charging Profile(s) were found by the EVSE matching the request."
       description: Result from the EVSE on a charging profile request.

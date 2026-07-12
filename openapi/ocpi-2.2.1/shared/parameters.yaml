@@ -49,7 +49,7 @@ components:
         Maximum number of objects to GET. The server might return fewer objects.
       schema:
         type: integer
-        minimum: 0
+        minimum: 1
 
     # ---- Client Owned Object Path Parameters ----
 
