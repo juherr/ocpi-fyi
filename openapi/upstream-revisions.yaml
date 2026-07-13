@@ -1,0 +1,57 @@
+schema_version: 1
+last_verified: 2026-07-13
+
+versions:
+  "2.1.1":
+    sources:
+      normative:
+        kind: normative-specification
+        repository: https://github.com/ocpi/ocpi
+        ref: release-2.1.1-bugfixes
+        commit: 28ea45329a50c3dbfd790505b97860854db1d4a6
+        path: /
+      official_openapi:
+        kind: official-openapi
+        repository: https://github.com/ocpi/openapi-specification
+        ref: main
+        commit: 7bacd82ba531fc565fc6d7a09a49d4dabd3aaef0
+        path: ocpi/2.1.1
+
+  "2.2.1":
+    sources:
+      normative:
+        kind: normative-specification
+        repository: https://github.com/ocpi/ocpi
+        ref: release-2.2.1-bugfixes
+        commit: ca8c04c5c8cc10ad1be2a82f61b19377d98e2a67
+        path: /
+        edition: 2
+        document_version: 2.2.1-d2
+      official_openapi:
+        kind: official-openapi
+        repository: https://github.com/ocpi/openapi-specification
+        ref: main
+        commit: 7bacd82ba531fc565fc6d7a09a49d4dabd3aaef0
+        path: ocpi/2.2.1
+
+  "2.3.0":
+    sources:
+      normative:
+        kind: normative-specification
+        repository: https://github.com/ocpi/ocpi
+        ref: 2.3.0/release/core
+        commit: 32a74ae78daac5ab257ddf502c6b04a817902722
+        path: /
+        edition: 2
+      legacy_bugfix_reference:
+        kind: supplementary-specification
+        repository: https://github.com/ocpi/ocpi
+        ref: release-2.3.0-bugfixes
+        commit: 9ed1e39c24f5b84cb1e4008939f47bea838f9b25
+        path: /
+      official_openapi:
+        kind: official-openapi
+        repository: https://github.com/ocpi/openapi-specification
+        ref: main
+        commit: 7bacd82ba531fc565fc6d7a09a49d4dabd3aaef0
+        path: ocpi/2.3.0

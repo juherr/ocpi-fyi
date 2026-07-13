@@ -6,14 +6,24 @@ on:
       - 'openapi/**'
       - '.spectral.yaml'
       - 'redocly.yaml'
+      - 'redocly-components.yaml'
+      - 'openapitools.json'
+      - 'package.json'
+      - 'package-lock.json'
       - 'scripts/check_openapi.sh'
+      - 'tools/test-openapi-invariants.js'
       - '.github/workflows/openapi-validation.yml'
   pull_request:
     paths:
       - 'openapi/**'
       - '.spectral.yaml'
       - 'redocly.yaml'
+      - 'redocly-components.yaml'
+      - 'openapitools.json'
+      - 'package.json'
+      - 'package-lock.json'
       - 'scripts/check_openapi.sh'
+      - 'tools/test-openapi-invariants.js'
       - '.github/workflows/openapi-validation.yml'
 
 jobs:
@@ -35,8 +45,8 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Install OpenAPI tooling
-        run: npm install -g @redocly/cli @stoplight/spectral-cli swagger-cli @openapitools/openapi-generator-cli
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run OpenAPI checks
-        run: bash scripts/check_openapi.sh
+        run: npm run validate:openapi

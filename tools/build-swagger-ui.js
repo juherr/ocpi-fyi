@@ -7,7 +7,7 @@
 //   (optional) public/api/<version>/swagger/openapi.raw.yaml (root with refs)
 //
 // Usage:
-//   npm i -D swagger-ui-dist swagger-cli yaml
+//   npm ci
 //   node tools/build-swagger-ui.js
 //   node tools/build-swagger-ui.js 2.3.0 2.2.1
 //
@@ -23,7 +23,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 const YAML = require("yaml");
 
 const swaggerUiDistDir = path.dirname(require.resolve("swagger-ui-dist/package.json"));
@@ -31,6 +31,7 @@ const swaggerUiAssetsDir = swaggerUiDistDir; // contains swagger-ui.css/js files
 
 const ROOT_DIR = process.cwd();
 const PUBLIC_API_DIR = path.join(ROOT_DIR, "public", "api");
+const REDOCLY = path.join(ROOT_DIR, "node_modules", ".bin", "redocly");
 
 // ---- Helpers ----------------------------------------------------------------
 function ensureDir(p) {
@@ -77,8 +78,9 @@ function listOcpiVersionsFromFolders() {
 
 function bundleOpenApiYaml(inputYamlPath, outputYamlPath) {
   // Use Redocly bundle to preserve named reusable schemas.
-  const cmd = `npx --yes @redocly/cli bundle "${inputYamlPath}" --output "${outputYamlPath}"`;
-  execSync(cmd, { stdio: "inherit" });
+  execFileSync(REDOCLY, ["bundle", inputYamlPath, "--output", outputYamlPath], {
+    stdio: "inherit",
+  });
 }
 
 function isLegacyVersionWithoutRoutingHeaders(version) {

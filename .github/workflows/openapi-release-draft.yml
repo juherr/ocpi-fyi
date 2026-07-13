@@ -85,7 +85,7 @@ jobs:
           for dir in openapi/ocpi-*; do
             version="${dir#openapi/ocpi-}"
             node tools/generate-root-openapi.js "${version}"
-            npx --yes @redocly/cli bundle "openapi/ocpi-${version}/openapi.yaml" --output "dist/release-assets/openapi-${version}.yaml"
+            npm exec -- redocly bundle "openapi/ocpi-${version}/openapi.yaml" --output "dist/release-assets/openapi-${version}.yaml"
           done
 
       - name: Package all OpenAPI sources

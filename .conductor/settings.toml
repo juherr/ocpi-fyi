@@ -1,0 +1,14 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "npm ci"
+run_mode = "concurrent"
+
+[scripts.run.validate-openapi]
+command = "npm run validate:openapi"
+default = true
+icon = "test-tube"
+
+[scripts.run.build-site]
+command = "npm run build:site:worktree"
+icon = "globe"

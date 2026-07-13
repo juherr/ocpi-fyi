@@ -22,6 +22,12 @@ Maintenance reminder:
 ## Antora + API Explorer Integration Notes
 
 - OpenAPI source directories are versioned under `openapi/ocpi-x.y.z`.
+- `openapi/DECISIONS.md` records intentional local OpenAPI modeling and compatibility choices.
+- `openapi/MAINTENANCE.md` explains when to run each OpenAPI validation, build, audit, and publication command.
+- `openapi/upstream-revisions.yaml` pins the normative and official OpenAPI commits used for audits.
+- `npm run validate:openapi` runs invariant tests and all pinned OpenAPI validators; append `-- <version>` for a focused run.
+- `npm run build:site:worktree` builds the full site from Conductor worktrees through a temporary standalone clone.
+- Run `npm run check:github` before publishing to confirm the current branch, tracking state, worktree, and pull request.
 - An optional `aggregate.json` in a version directory customizes generated root metadata and excludes add-on modules from the core aggregate.
 - `npm run build:redoc` generates one Redoc page per version in `public/api/<version>/index.html`.
 - `npm run build:openapi-diff` generates OpenAPI comparison pages under `public/api/<version>/diff/` for configured baselines.

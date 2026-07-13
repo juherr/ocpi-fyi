@@ -229,8 +229,7 @@ function main() {
   console.log(`✔ Generated ${wrapperPages.length} wrapper pages into: ${path.relative(ROOT_DIR, SPEC_PAGES_DIR)}`);
   console.log(`✔ Synced images into: ${path.relative(ROOT_DIR, IMAGES_DIR)}`);
   console.log(`✔ Synced examples into: ${path.relative(ROOT_DIR, EXAMPLES_ATTACH_DIR)}`);
-  console.log("\nNext steps:\n  npx antora antora-playbook.yml");
+  console.log("\nNext steps:\n  npm exec -- antora antora-playbook.yml");
 }
 
 main();
-

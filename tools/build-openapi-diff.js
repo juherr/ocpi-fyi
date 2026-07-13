@@ -7,6 +7,8 @@ const { OPENAPI_DIFF_BASELINES } = require('./openapi-diff-config')
 const ROOT_DIR = process.cwd()
 const OPENAPI_ROOT_DIR = path.join(ROOT_DIR, 'openapi')
 const PUBLIC_API_DIR = path.join(ROOT_DIR, 'public', 'api')
+const REDOCLY = path.join(ROOT_DIR, 'node_modules', '.bin', 'redocly')
+const OPENAPI_CHANGES = path.join(ROOT_DIR, 'node_modules', '.bin', 'openapi-changes')
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true })
@@ -36,8 +38,8 @@ function runNodeScript(scriptName, args) {
 function bundleOpenApiYaml(inputYamlPath, outputYamlPath) {
   ensureDir(path.dirname(outputYamlPath))
   execFileSync(
-    'npx',
-    ['--yes', '@redocly/cli', 'bundle', inputYamlPath, '--output', outputYamlPath],
+    REDOCLY,
+    ['bundle', inputYamlPath, '--output', outputYamlPath],
     { cwd: ROOT_DIR, stdio: 'inherit' }
   )
 }
@@ -47,10 +49,8 @@ function runOpenApiChanges(oldSpecPath, newSpecPath, reportHtmlPath, reportJsonP
   ensureDir(path.dirname(reportJsonPath))
 
   execFileSync(
-    'npx',
+    OPENAPI_CHANGES,
     [
-      '--yes',
-      '@pb33f/openapi-changes',
       '--no-logo',
       'html-report',
       oldSpecPath,
@@ -63,10 +63,8 @@ function runOpenApiChanges(oldSpecPath, newSpecPath, reportHtmlPath, reportJsonP
   )
 
   const reportOutput = execFileSync(
-    'npx',
+    OPENAPI_CHANGES,
     [
-      '--yes',
-      '@pb33f/openapi-changes',
       '--no-logo',
       'report',
       oldSpecPath,

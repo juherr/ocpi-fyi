@@ -3,6 +3,9 @@ info:
   title: OCPI 2.1.1 - Shared Components
   version: 2.1.1
   description: Shared data types and schemas for OCPI 2.1.1
+  license:
+    name: Creative Commons Attribution-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nd/4.0/
 paths: {}
 components:
   schemas:

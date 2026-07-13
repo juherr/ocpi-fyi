@@ -75,6 +75,12 @@ npm run build:site
 
 Generated site output is written to `public/`.
 
+Conductor workspaces use a Git worktree, which Antora cannot consume directly as a local content source. Use the worktree-aware wrapper to build in a temporary standalone clone and copy the generated output back to `public/`:
+
+```bash
+npm run build:site:worktree
+```
+
 ### Site search (Pagefind)
 
 - Search is powered by [Pagefind](https://pagefind.app/).
@@ -124,10 +130,19 @@ npm run build:search
 Typical API build commands:
 
 ```bash
+npm run test:openapi-invariants
+npm run validate:openapi
+npm run validate:openapi -- 2.3.0
 npm run build:redoc
 npm run build:openapi-diff
 npm run build:swagger
 ```
+
+`npm run validate:openapi` uses the locally pinned Redocly, Spectral, and OpenAPI Generator versions. The optional version argument limits validation to one `openapi/ocpi-x.y.z` directory.
+
+Intentional compatibility choices and deviations from the official OpenAPI repository are recorded by version in `openapi/DECISIONS.md`. Immutable upstream commits for each audited OCPI version are recorded in `openapi/upstream-revisions.yaml`. The complete maintainer workflow and command reference are available in `openapi/MAINTENANCE.md`.
+
+Before publishing a branch, run `npm run check:github` to confirm its tracking branch, remote delta, worktree state, and current pull request.
 
 `npm run build:swagger` auto-detects every `openapi/ocpi-x.y.z/` directory and generates one Swagger UI page per version.
 

@@ -276,6 +276,7 @@ components:
           type: string
           maxLength: 255
           description: Identifier of the invoice covered by this record.
+        # checkov:skip=CKV_OPENAPI_21: OCPI defines one or more CDR IDs without a maximum.
         cdrs:
           type: array
           minItems: 1
