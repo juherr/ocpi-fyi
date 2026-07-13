@@ -47,6 +47,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
             # Pagination headers
             X-Total-Count:
               $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
@@ -58,8 +67,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
   /tokens/{token_uid}/authorize:
     post:
       operationId: postTokenAuthorize
@@ -97,14 +108,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthorizationInfoResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Token not known by the eMSP.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -146,14 +168,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Token not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     put:
       operationId: putReceiverToken
       summary: Push Token (Receiver)
@@ -209,6 +242,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
@@ -221,12 +263,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     patch:
       operationId: patchReceiverToken
       summary: Partially Update Token (Receiver)
@@ -268,12 +321,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -289,7 +355,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     TokenResponse:
       type: object
@@ -382,8 +448,7 @@ components:
           minLength: 2
           maxLength: 2
         default_profile_type:
-          type: string
-          maxLength: 32
+          $ref: ./sessions.yaml#/components/schemas/ProfileType
         energy_contract:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/EnergyContract
         last_updated:
@@ -405,10 +470,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the eMSP that owns this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that owns this Token.
         uid:
@@ -443,6 +510,7 @@ components:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/WhitelistType
         language:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO 639-1 language code for the Token owner's preferred interface
             language.

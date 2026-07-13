@@ -55,12 +55,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChargingProfileEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         activeChargingProfileResult:
           '{$request.query.response_url}':
@@ -94,12 +105,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     put:
       operationId: putChargingProfile
       summary: Set Charging Profile (Receiver)
@@ -130,12 +152,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChargingProfileEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         chargingProfileResult:
           '{$request.body#/response_url}':
@@ -168,12 +201,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     delete:
       operationId: deleteChargingProfile
       summary: Clear Charging Profile (Receiver)
@@ -205,12 +249,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChargingProfileEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         clearProfileResult:
           '{$request.query.response_url}':
@@ -243,12 +298,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -291,12 +357,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -342,10 +419,23 @@ webhooks:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
   chargingProfileResult:
     post:
       operationId: postChargingProfileResult
@@ -381,10 +471,23 @@ webhooks:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
   clearProfileResult:
     post:
       operationId: postClearProfileResult
@@ -420,17 +523,30 @@ webhooks:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
 components:
   securitySchemes:
     TokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     ChargingProfileEnvelopeResponse:
       type: object
@@ -565,6 +681,11 @@ components:
       - A
       description: 'Unit of measure for charging rate: W (Watts) or A (Amperes per
         phase).'
+      x-enumDescriptions:
+        W: Watts (power). This is the total allowed charging power. It is usually more convenient to use this for DC charging.
+        A: Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more convenient to use this for AC charging.
+
+
     ChargingProfileResponseType:
       type: string
       enum:
@@ -574,6 +695,14 @@ components:
       - TOO_OFTEN
       - UNKNOWN_SESSION
       description: Response from CPO on a charging profile request.
+      x-enumDescriptions:
+        ACCEPTED: ChargingProfile request accepted by the CPO, request will be forwarded to the EVSE.
+        NOT_SUPPORTED: The ChargingProfiles not supported by this CPO, Charge Point, EVSE etc.
+        REJECTED: ChargingProfile request rejected by the CPO. (Session might not be from a customer of the eMSP that sent this request)
+        TOO_OFTEN: ChargingProfile request rejected by the CPO, requests are sent more often than allowed.
+        UNKNOWN_SESSION: The Session in the requested command is not known by this CPO.
+
+
     ChargingProfileResultType:
       type: string
       enum:
@@ -581,3 +710,7 @@ components:
       - REJECTED
       - UNKNOWN
       description: Result from the EVSE on a charging profile request.
+      x-enumDescriptions:
+        ACCEPTED: ChargingProfile request accepted by the EVSE.
+        REJECTED: ChargingProfile request rejected by the EVSE.
+        UNKNOWN: No Charging Profile(s) were found by the EVSE matching the request.

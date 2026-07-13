@@ -53,6 +53,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClientInfoListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiConfigurationBadRequestResponse
         '401':
           description: Unauthorized.
   /hubclientinfo/{country_code}/{party_id}:
@@ -82,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClientInfoResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiConfigurationBadRequestResponse
         '401':
           description: Unauthorized.
         '404':
@@ -126,6 +130,8 @@ paths:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiConfigurationBadRequestResponse
         '401':
           description: Unauthorized.
 components:
@@ -134,7 +140,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     ClientInfoResponse:
       type: object
@@ -190,10 +196,12 @@ components:
       properties:
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: CPO or eMSP ID of this party.
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: Country code of the country this party is operating in.
         role:
@@ -211,3 +219,8 @@ components:
       - PLANNED
       - SUSPENDED
       description: Status of a party's connection to the Hub.
+      x-enumDescriptions:
+        CONNECTED: Party is connected.
+        OFFLINE: Party is currently not connected.
+        PLANNED: "Connection to this party is planned, but has never been connected."
+        SUSPENDED: "Party is now longer active, will never connect anymore."

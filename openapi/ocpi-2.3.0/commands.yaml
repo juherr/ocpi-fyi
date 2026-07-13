@@ -17,6 +17,62 @@ servers:
 security:
 - TokenAuth: []
 paths:
+  /commands/{command}:
+    post:
+      operationId: postExtendedCommand
+      summary: Send an extended command (Receiver)
+      description: >-
+        Send a custom command identified by an extended CommandType value. The five
+        standard commands remain documented on their literal paths with their specific
+        request schemas.
+      tags:
+      - Commands - Receiver
+      parameters:
+      - name: command
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/CommandType'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Payload defined by the parties that agreed on the extended command.
+      responses:
+        '200':
+          description: Command acknowledged by CPO.
+          headers:
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+    parameters:
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Correlation-ID
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-party-id
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-party-id
   /commands/CANCEL_RESERVATION:
     post:
       operationId: postCancelReservation
@@ -39,12 +95,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         commandResult:
           '{$request.body#/response_url}':
@@ -78,12 +145,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -115,12 +193,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         commandResult:
           '{$request.body#/response_url}':
@@ -152,12 +241,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -189,12 +289,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         commandResult:
           '{$request.body#/response_url}':
@@ -226,12 +337,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -263,12 +385,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         commandResult:
           '{$request.body#/response_url}':
@@ -300,12 +433,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -338,12 +482,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommandEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
       callbacks:
         commandResult:
           '{$request.body#/response_url}':
@@ -375,12 +530,23 @@ paths:
                       $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
                     X-Correlation-ID:
                       $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+                    # Routing headers
+                    OCPI-from-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+                    OCPI-from-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+                    OCPI-to-country-code:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+                    OCPI-to-party-id:
+                      $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
                   content:
                     application/json:
                       schema:
                         $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
                 '400':
-                  description: Invalid callback payload.
+                  $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+                '401':
+                  $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -426,18 +592,48 @@ webhooks:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
 components:
   securitySchemes:
     TokenAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
+    CommandType:
+      anyOf:
+      - type: string
+        enum:
+        - CANCEL_RESERVATION
+        - RESERVE_NOW
+        - START_SESSION
+        - STOP_SESSION
+        - UNLOCK_CONNECTOR
+      - type: string
+      description: Open command type. Parties may agree on additional command values.
+      x-enumDescriptions:
+        CANCEL_RESERVATION: Request the Charge Point to cancel a specific reservation.
+        RESERVE_NOW: Request the Charge Point to reserve a specific EVSE for a Token for a certain time, starting now.
+        START_SESSION: Request the Charge Point to start a transaction on the given EVSE or Connector.
+        STOP_SESSION: Request the Charge Point to stop an ongoing session.
+        UNLOCK_CONNECTOR: Request the Charge Point to unlock the connector, if applicable.
     CommandEnvelopeResponse:
       type: object
       required:
@@ -630,6 +826,13 @@ components:
       - ACCEPTED
       - UNKNOWN_SESSION
       description: Response from the CPO on the command request.
+      x-enumDescriptions:
+        NOT_SUPPORTED: The requested command is not supported by this CPO, Charge Point, EVSE etc.
+        REJECTED: Command request rejected by the CPO. (Session might not be from a customer of the eMSP that sent this request)
+        ACCEPTED: Command request accepted by the CPO.
+        UNKNOWN_SESSION: The Session in the requested command is not known by this CPO.
+
+
     CommandResultType:
       type: string
       enum:
@@ -643,3 +846,13 @@ components:
       - TIMEOUT
       - UNKNOWN_RESERVATION
       description: Result of the command as reported by the Charge Point.
+      x-enumDescriptions:
+        ACCEPTED: Command request accepted by the Charge Point.
+        CANCELED_RESERVATION: The Reservation has been canceled by the CPO.
+        EVSE_OCCUPIED: EVSE is currently occupied, another session is ongoing. Cannot start a new session.
+        EVSE_INOPERATIVE: EVSE is currently inoperative or faulted.
+        FAILED: Execution of the command failed at the Charge Point.
+        NOT_SUPPORTED: The requested command is not supported by this Charge Point, EVSE etc.
+        REJECTED: Command request rejected by the Charge Point.
+        TIMEOUT: Command request timeout, no response received from the Charge Point in a reasonable time.
+        UNKNOWN_RESERVATION: The Reservation in the requested command is not known by this Charge Point.

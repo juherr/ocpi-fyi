@@ -41,6 +41,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VersionListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiConfigurationBadRequestResponse
         '401':
           description: Unauthorized - Missing or invalid credentials token.
   /versions/{version}:
@@ -75,6 +77,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VersionDetailsResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiConfigurationBadRequestResponse
         '401':
           description: Unauthorized - Missing or invalid credentials token.
         '404':
@@ -85,7 +89,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     VersionListResponse:
       type: object
@@ -185,6 +189,11 @@ components:
       - RECEIVER
       description: The role of an interface. SENDER is implemented by the owner of
         data (for Pull). RECEIVER is implemented by the receiver of data (for Push).
+      x-enumDescriptions:
+        SENDER: Sender Interface implementation. Interface implemented by the owner of data, so the Receiver can Pull information from the data Sender/owner.
+        RECEIVER: Receiver Interface implementation. Interface implemented by the receiver of data, so the Sender/owner can Push information to the Receiver.
+
+
     ModuleID:
       anyOf:
       - type: string
@@ -200,6 +209,19 @@ components:
         - tokens
       - type: string
       description: The identifier of an OCPI module.
+      x-enumDescriptions:
+        cdrs: CDRs module
+        chargingprofiles: Charging Profiles module
+        commands: Commands module
+        credentials: Credentials & Registration module (required for all implementations). The `role` field has no function for this module.
+        hubclientinfo: Hub Client Info module
+        locations: Locations module
+        sessions: Sessions module
+        tariffs: Tariffs module
+        tokens: Tokens module
+        bookings: Bookings module
+        payments: Payments module
+
     VersionNumber:
       anyOf:
       - type: string
@@ -212,3 +234,10 @@ components:
         - 2.3.0
       - type: string
       description: List of known OCPI version numbers.
+      x-enumDescriptions:
+        "2.0": OCPI version 2.0
+        "2.1": OCPI version 2.1 (DEPRECATED, do not use, use 2.1.1 instead)
+        "2.1.1": OCPI version 2.1.1
+        "2.2": OCPI version 2.2 (DEPRECATED, do not use, use 2.2.1 instead)
+        "2.2.1": OCPI version 2.2.1
+        "2.3.0": OCPI version 2.3.0 (this version)

@@ -48,6 +48,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
             # Pagination headers
             X-Total-Count:
               $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
@@ -59,8 +68,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
   /sessions/{session_id}/charging_preferences:
     put:
       operationId: putChargingPreferences
@@ -92,14 +103,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ChargingPreferencesEnvelopeResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Session not found or EVSE does not support Charging Preferences.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -134,14 +156,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SessionResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Session not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     put:
       operationId: putReceiverSession
       summary: Push Session (Receiver)
@@ -194,6 +227,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
@@ -206,12 +248,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     patch:
       operationId: patchReceiverSession
       summary: Partially Update Session (Receiver)
@@ -253,12 +306,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -274,7 +340,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     SessionResponse:
       type: object
@@ -344,6 +410,8 @@ components:
       required:
       - last_updated
       properties:
+        start_date_time:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         end_date_time:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
         kwh:
@@ -355,11 +423,21 @@ components:
         authorization_reference:
           type: string
           maxLength: 36
+        location_id:
+          type: string
+          maxLength: 36
+        evse_uid:
+          type: string
+          maxLength: 36
+        connector_id:
+          type: string
+          maxLength: 36
         meter_id:
           type: string
           maxLength: 255
         currency:
           type: string
+          minLength: 3
           maxLength: 3
         charging_periods:
           type: array
@@ -392,10 +470,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that owns this Session.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that owns this Session.
         id:
@@ -437,6 +517,7 @@ components:
           description: Optional identification of the kWh meter.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency used for this session.
         charging_periods:
@@ -478,6 +559,14 @@ components:
       - PENDING
       - RESERVATION
       description: The status of a charging session.
+      x-enumDescriptions:
+        ACTIVE: "The session has been accepted and is active. All pre-conditions were met: Communication between EV and EVSE (for example: cable plugged in correctly), EV or driver is authorized. EV is being charged, or can be charged. Energy is, or is not, being transfered."
+        COMPLETED: The session has been finished successfully. No more modifications will be made to the Session object using this state.
+        INVALID: The Session object using this state is declared invalid and will not be billed.
+        PENDING: The session is pending, it has not yet started. Not all pre-conditions are met. This is the initial state. The session might never become an active session.
+        RESERVATION: The session is started due to a reservation, charging has not yet started. The session might never become an active session.
+
+
     ProfileType:
       type: string
       enum:
@@ -486,6 +575,13 @@ components:
       - GREEN
       - REGULAR
       description: Type of smart charging profile selected by the driver.
+      x-enumDescriptions:
+        CHEAP: Driver wants to use the cheapest charging profile possible.
+        FAST: Driver wants his EV charged as quickly as possible and is willing to pay a premium for this, if needed.
+        GREEN: Driver wants his EV charged with as much regenerative (green) energy as possible.
+        REGULAR: Driver does not have special preferences.
+
+
     ChargingPreferencesResponse:
       type: string
       enum:
@@ -495,3 +591,9 @@ components:
       - NOT_POSSIBLE
       - PROFILE_TYPE_NOT_SUPPORTED
       description: Response to a PUT Charging Preferences request.
+      x-enumDescriptions:
+        ACCEPTED: Charging Preferences accepted, EVSE will try to accomplish them, although this is no guarantee that they will be fulfilled.
+        DEPARTURE_REQUIRED: CPO requires departure_time to be able to perform Charging Preference based Smart Charging.
+        ENERGY_NEED_REQUIRED: CPO requires energy_need to be able to perform Charging Preference based Smart Charging.
+        NOT_POSSIBLE: Charging Preferences contain a demand that the EVSE knows it cannot fulfill.
+        PROFILE_TYPE_NOT_SUPPORTED: profile_type contains a value that is not supported by the EVSE.

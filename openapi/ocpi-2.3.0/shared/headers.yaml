@@ -15,13 +15,39 @@ components:
       description: Echoed from the request. Same unique request ID.
       schema:
         type: string
-        format: uuid
 
     X-Correlation-ID:
       description: Echoed from the request. Same correlation ID.
       schema:
         type: string
-        format: uuid
+
+    OCPI-from-country-code:
+      description: ISO-3166 alpha-2 country code of the party this response is sent from.
+      schema:
+        type: string
+        minLength: 2
+        maxLength: 2
+
+    OCPI-from-party-id:
+      description: Party ID of the party this response is sent from.
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 3
+
+    OCPI-to-country-code:
+      description: ISO-3166 alpha-2 country code of the party this response is sent to.
+      schema:
+        type: string
+        minLength: 2
+        maxLength: 2
+
+    OCPI-to-party-id:
+      description: Party ID of the party this response is sent to.
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 3
 
     X-Total-Count:
       description: >-
@@ -60,7 +86,6 @@ components:
         The response to this request SHALL contain the same ID.
       schema:
         type: string
-        format: uuid
       example: "f5be3127-a31e-4e8c-84c3-0e4c89a48d71"
 
     X-Correlation-ID:
@@ -72,7 +97,6 @@ components:
         Every response to this request SHALL contain the same ID.
       schema:
         type: string
-        format: uuid
       example: "9d863a1c-e981-4fc1-b3be-8c39ec35bc38"
 
     OCPI-from-country-code:

@@ -18,12 +18,12 @@ components:
           type: string
           maxLength: 10
           description: Latitude in decimal degree (e.g. "50.770774").
-          pattern: "^-?[0-9]{1,2}\\.[0-9]{1,8}$"
+          pattern: "^-?[0-9]{1,2}\\.[0-9]{5,7}$"
         longitude:
           type: string
           maxLength: 11
           description: Longitude in decimal degree (e.g. "-126.104965").
-          pattern: "^-?[0-9]{1,3}\\.[0-9]{1,8}$"
+          pattern: "^-?[0-9]{1,3}\\.[0-9]{5,7}$"
       additionalProperties: true
 
     AdditionalGeoLocation:
@@ -36,10 +36,12 @@ components:
         latitude:
           type: string
           maxLength: 10
+          pattern: "^-?[0-9]{1,2}\\.[0-9]{5,7}$"
           description: Latitude in decimal degree.
         longitude:
           type: string
           maxLength: 11
+          pattern: "^-?[0-9]{1,3}\\.[0-9]{5,7}$"
           description: Longitude in decimal degree.
         name:
           $ref: './types.yaml#/components/schemas/DisplayText'
@@ -138,12 +140,12 @@ components:
         period_begin:
           type: string
           maxLength: 5
-          pattern: "^[0-2][0-9]:[0-5][0-9]$"
+          pattern: "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
           description: Begin of the regular period (HH:MM, 24h format).
         period_end:
           type: string
           maxLength: 5
-          pattern: "^[0-2][0-9]:[0-5][0-9]$"
+          pattern: "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
           description: End of the regular period (HH:MM, 24h format).
       additionalProperties: true
 
@@ -232,6 +234,14 @@ components:
             - OWNER
         - type: string
       description: The category of an image to obtain the correct usage.
+      x-enumDescriptions:
+        CHARGER: Photo of the physical device that contains one or more EVSEs.
+        ENTRANCE: Location entrance photo. Should show the car entrance to the location from street side.
+        LOCATION: Location overview photo.
+        NETWORK: Logo of an associated roaming network to be displayed with the EVSE for example in lists, maps and detailed information views.
+        OPERATOR: Logo of the charge point operator, for example a municipality, to be displayed in the EVSEs detailed information view or in lists and maps, if no network logo is present.
+        OTHER: Other
+        OWNER: Logo of the charge point owner, for example a local store, to be displayed in the EVSEs detailed information view.
 
     EnergySourceCategory:
       type: string
@@ -245,6 +255,16 @@ components:
         - WIND
         - WATER
       description: Categories of energy sources.
+      x-enumDescriptions:
+        NUCLEAR: Nuclear power sources.
+        GENERAL_FOSSIL: All kinds of fossil power sources.
+        COAL: Fossil power from coal.
+        GAS: Fossil power from gas.
+        GENERAL_GREEN: All kinds of regenerative power sources.
+        SOLAR: Regenerative power from PV.
+        WIND: Regenerative power from wind turbines.
+        WATER: Regenerative power from water turbines.
+
 
     EnvironmentalImpactCategory:
       anyOf:
@@ -254,3 +274,6 @@ components:
             - CARBON_DIOXIDE
         - type: string
       description: Categories of environmental impact values.
+      x-enumDescriptions:
+        NUCLEAR_WASTE: Produced nuclear waste in grams per kilowatthour.
+        CARBON_DIOXIDE: Exhausted carbon dioxide in grams per kilowatthour.

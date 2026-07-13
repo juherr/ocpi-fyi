@@ -3,7 +3,9 @@ info:
   title: OCPI 2.3.0 - Payments
   description: The Payments module provides information about payment terminals and
     financial advice confirmations. Data owner is typically the PTP (Payment Terminal
-    Provider).
+    Provider. In this aggregated description, Receiver operations use an explicit
+    /receiver path segment to distinguish them from Sender operations. This path
+    convention is local to this aggregate and is not prescribed by OCPI.
   version: 2.3.0
   license:
     name: Creative Commons Attribution-NoDerivatives 4.0 International
@@ -39,6 +41,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
             # Pagination headers
             X-Total-Count:
               $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
@@ -50,8 +61,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TerminalListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -85,14 +98,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TerminalResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Terminal not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     put:
       operationId: putTerminal
       summary: Update Terminal (Sender)
@@ -137,12 +161,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     patch:
       operationId: patchTerminal
       summary: Partially Update Terminal (Sender)
@@ -176,12 +211,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -203,7 +251,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Terminal'
+              $ref: '#/components/schemas/TerminalActivation'
       responses:
         '200':
           description: Terminal activated.
@@ -213,12 +261,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -251,12 +310,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -288,12 +360,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -326,14 +409,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TerminalResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Terminal not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -365,6 +459,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
             # Pagination headers
             X-Total-Count:
               $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
@@ -376,8 +479,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinancialAdviceConfirmationListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -411,14 +516,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinancialAdviceConfirmationResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: FAC not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -451,12 +567,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -489,14 +616,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FinancialAdviceConfirmationResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: FAC not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -512,7 +650,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     TerminalResponse:
       type: object
@@ -598,6 +736,72 @@ components:
         timestamp:
           $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
       additionalProperties: true
+    TerminalActivation:
+      type: object
+      description: >-
+        Terminal data used for an activation request. terminal_id is optional because
+        it can be assigned by the PTP during activation.
+      required:
+      - last_updated
+      properties:
+        terminal_id:
+          type: string
+          maxLength: 36
+          description: Unique ID that identifies the terminal, when already known.
+        customer_reference:
+          type: string
+          maxLength: 36
+          description: Reference used to link the terminal to a CSMS.
+        party_id:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: Alternative to customer_reference.
+        country_code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: Alternative to customer_reference.
+        address:
+          type: string
+          maxLength: 45
+        city:
+          type: string
+          maxLength: 45
+        postal_code:
+          type: string
+          maxLength: 10
+        state:
+          type: string
+          maxLength: 20
+        country:
+          type: string
+          minLength: 3
+          maxLength: 3
+        coordinates:
+          $ref: ./shared/schemas/locations.yaml#/components/schemas/GeoLocation
+        invoice_base_url:
+          type: string
+          format: uri
+          maxLength: 255
+        invoice_creator:
+          $ref: '#/components/schemas/InvoiceCreator'
+        reference:
+          type: string
+          maxLength: 36
+        location_ids:
+          type: array
+          items:
+            type: string
+            maxLength: 36
+        evse_uids:
+          type: array
+          items:
+            type: string
+            maxLength: 36
+        last_updated:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
+      additionalProperties: true
     TerminalPatch:
       type: object
       description: Partial Terminal update used to assign location_ids and/or evse_uids.
@@ -637,10 +841,12 @@ components:
           description: Reference to link terminal to CSMS, provided via order process.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: Alternative to customer_reference.
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: Alternative to customer_reference.
         address:
@@ -661,6 +867,7 @@ components:
           description: State or province.
         country:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO 3166-1 alpha-3 country code.
         coordinates:
@@ -715,6 +922,7 @@ components:
           $ref: ./shared/schemas/types.yaml#/components/schemas/Price
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 currency code.
         eft_data:
@@ -739,6 +947,11 @@ components:
       - CPO
       - PTP
       description: Which party creates the invoice for the EV driver.
+      x-enumDescriptions:
+        CPO: The CPO issues the invoice and provides it via the invoice_base_url + authorization_reference.
+        PTP: The PTP issues the invoice and directly shows/provides it the eDriver via the payment terminal.
+
+
     CaptureStatusCode:
       type: string
       enum:
@@ -746,3 +959,7 @@ components:
       - PARTIAL_SUCCESS
       - FAILED
       description: Status code for the financial advice (payment capture).
+      x-enumDescriptions:
+        SUCCESS: Indicates that the payment capture was completed successfully without any issues. Funds were secured and will be settled according to the payment processor's timeline. This status confirms that all checks (e.g., fraud, card validation) passed and the transaction was approved.
+        PARTIAL_SUCCESS: Used when only part of the transaction amount was approved or when certain conditions of the payment were altered during processing. This might occur in scenarios where the available balance was insufficient for the full requested amount, or specific transaction limits were enforced by the card issuer.
+        FAILED: Indicates that the payment capture attempt was unsuccessful. This failure can be due to various reasons such as insufficient funds, card expiration, network issues, or refusal by the card issuer.

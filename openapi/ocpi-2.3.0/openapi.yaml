@@ -26,6 +26,8 @@ paths:
     $ref: ./commands.yaml#/paths/~1commands~1STOP_SESSION
   /commands/UNLOCK_CONNECTOR:
     $ref: ./commands.yaml#/paths/~1commands~1UNLOCK_CONNECTOR
+  /commands/{command}:
+    $ref: ./commands.yaml#/paths/~1commands~1{command}
   /credentials:
     $ref: ./credentials.yaml#/paths/~1credentials
   /hubclientinfo:
@@ -101,4 +103,4 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.

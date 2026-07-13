@@ -47,6 +47,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
             # Pagination headers
             X-Total-Count:
               $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
@@ -58,8 +67,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TariffListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
   /tariffs/{country_code}/{party_id}/{tariff_id}:
     get:
       operationId: getReceiverTariff
@@ -87,14 +98,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TariffResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Tariff not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     put:
       operationId: putReceiverTariff
       summary: Push Tariff (Receiver)
@@ -125,6 +147,15 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
@@ -137,12 +168,23 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
     delete:
       operationId: deleteReceiverTariff
       summary: Delete Tariff (Receiver)
@@ -167,14 +209,25 @@ paths:
               $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
             X-Correlation-ID:
               $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
           content:
             application/json:
               schema:
                 $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
         '401':
-          description: Unauthorized.
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
         '404':
-          description: Tariff not found.
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
     parameters:
     # Correlation headers
     - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
@@ -190,7 +243,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
   schemas:
     TariffResponse:
       type: object
@@ -249,10 +302,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO that owns this Tariff.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO that owns this Tariff.
         id:
@@ -261,6 +316,7 @@ components:
           description: Uniquely identifies the Tariff within the CPO's platform.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency of this Tariff.
         type:
@@ -360,22 +416,22 @@ components:
         start_time:
           type: string
           maxLength: 5
-          pattern: ^[0-2][0-9]:[0-5][0-9]$
+          pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
           description: Start time of day in local time (HH:MM).
         end_time:
           type: string
           maxLength: 5
-          pattern: ^[0-2][0-9]:[0-5][0-9]$
+          pattern: ^([0-1][0-9]|2[0-3]):[0-5][0-9]$
           description: End time of day in local time (HH:MM).
         start_date:
           type: string
           maxLength: 10
-          pattern: ^\d{4}-\d{2}-\d{2}$
+          pattern: ^([12][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$
           description: Start date in local time (YYYY-MM-DD), inclusive.
         end_date:
           type: string
           maxLength: 10
-          pattern: ^\d{4}-\d{2}-\d{2}$
+          pattern: ^([12][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$
           description: End date in local time (YYYY-MM-DD), exclusive.
         min_kwh:
           type: number
@@ -418,6 +474,14 @@ components:
       - PROFILE_GREEN
       - REGULAR
       description: Type of tariff.
+      x-enumDescriptions:
+        AD_HOC_PAYMENT: "Used to describe that a Tariff is valid when ad-hoc payment is used at the Charge Point (for example: Debit or Credit card payment terminal)."
+        PROFILE_CHEAP: "Used to describe that a Tariff is valid when Charging Preference: CHEAP is set for the session."
+        PROFILE_FAST: "Used to describe that a Tariff is valid when Charging Preference: FAST is set for the session."
+        PROFILE_GREEN: "Used to describe that a Tariff is valid when Charging Preference: GREEN is set for the session."
+        REGULAR: "Used to describe that a Tariff is valid when using an RFID, without any Charging Preference, or when Charging Preference: REGULAR is set for the session."
+
+
     TariffDimensionType:
       type: string
       enum:
@@ -427,6 +491,13 @@ components:
       - TIME
       description: 'The dimension being priced: ENERGY (kWh), FLAT (no unit), PARKING_TIME
         (hours not charging), TIME (hours charging).'
+      x-enumDescriptions:
+        ENERGY: "Defined in kWh, step_size multiplier: 1 Wh"
+        FLAT: "Flat fee without unit for step_size"
+        PARKING_TIME: "Time not charging: defined in hours, step_size multiplier: 1 second"
+        TIME: "Time charging: defined in hours, step_size multiplier: 1 second. Can also be used in combination with a RESERVATION restriction to describe the price of the reservation time."
+
+
     DayOfWeek:
       type: string
       enum:
@@ -437,6 +508,14 @@ components:
       - FRIDAY
       - SATURDAY
       - SUNDAY
+      x-enumDescriptions:
+        MONDAY: Monday.
+        TUESDAY: Tuesday.
+        WEDNESDAY: Wednesday.
+        THURSDAY: Thursday.
+        FRIDAY: Friday.
+        SATURDAY: Saturday.
+        SUNDAY: Sunday.
       description: Day of the week.
     ReservationRestrictionType:
       type: string
@@ -444,6 +523,11 @@ components:
       - RESERVATION
       - RESERVATION_EXPIRES
       description: Type of reservation restriction in a TariffElement.
+      x-enumDescriptions:
+        RESERVATION: Used in Tariff Elements to describe costs for a reservation.
+        RESERVATION_EXPIRES: Used in Tariff Elements to describe costs for a reservation that expires (i.e. driver does not start a charging session before expiry_date of the reservation).
+
+
     TaxIncluded:
       type: string
       enum:
@@ -451,3 +535,7 @@ components:
       - 'NO'
       - N/A
       description: Whether taxes are included in this Tariff's prices.
+      x-enumDescriptions:
+        YES: Taxes are included in the prices in this Tariff.
+        NO: Taxes are not included, and will be added on top of the prices in this Tariff.
+        "N/A": No taxes are applicable to this Tariff.
