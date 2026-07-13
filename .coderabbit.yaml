@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+reviews:
+  profile: assertive
+  path_instructions:
+    - path: "openapi/**"
+      instructions: |
+        Treat the imported OCPI specification referenced by openapi/upstream-revisions.yaml as normative.
+        Read openapi/DECISIONS.md before recommending route, enum, regex, bound, or schema changes.
+        The official OpenAPI repository is a comparison source, not the normative specification.
+        Do not recommend finite limits or closed enums unless the normative OCPI edition requires them.
+    - path: "openapi/ocpi-2.2.1/**"
+      instructions: |
+        Review against OCPI 2.2.1 Edition 2. The activeprofile charging-profile route is an intentional local compatibility route.
+    - path: "openapi/ocpi-2.3.0/**"
+      instructions: |
+        Review against OCPI 2.3.0 Edition 2. Payments is intentionally excluded from the core aggregate, extensible command enums are intentional, and the activeprofile route is retained for compatibility.
+    - path: "specifications/**"
+      instructions: |
+        These files preserve imported upstream specification history. Flag accidental edits, but do not suggest broad formatting or structural rewrites.
+    - path: "tools/**"
+      instructions: |
+        Build tools must use pinned local dependencies and must not rewrite tracked OpenAPI aggregate files as a side effect.
+    - path: "scripts/**"
+      instructions: |
+        Scripts must work in non-interactive Conductor worktree shells, fail with actionable errors, and preserve command failures.

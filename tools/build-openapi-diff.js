@@ -5,7 +5,6 @@ const { execFileSync } = require('child_process')
 const { OPENAPI_DIFF_BASELINES } = require('./openapi-diff-config')
 
 const ROOT_DIR = process.cwd()
-const OPENAPI_ROOT_DIR = path.join(ROOT_DIR, 'openapi')
 const PUBLIC_API_DIR = path.join(ROOT_DIR, 'public', 'api')
 const REDOCLY = path.join(ROOT_DIR, 'node_modules', '.bin', 'redocly')
 const OPENAPI_CHANGES = path.join(ROOT_DIR, 'node_modules', '.bin', 'openapi-changes')
@@ -51,7 +50,6 @@ function runOpenApiChanges(oldSpecPath, newSpecPath, reportHtmlPath, reportJsonP
   execFileSync(
     OPENAPI_CHANGES,
     [
-      '--no-logo',
       'html-report',
       oldSpecPath,
       newSpecPath,
@@ -65,7 +63,6 @@ function runOpenApiChanges(oldSpecPath, newSpecPath, reportHtmlPath, reportJsonP
   const reportOutput = execFileSync(
     OPENAPI_CHANGES,
     [
-      '--no-logo',
       'report',
       oldSpecPath,
       newSpecPath,
@@ -410,17 +407,12 @@ function main() {
     }
   }
 
-  for (const version of versionsToPrepare) {
-    runNodeScript('generate-root-openapi.js', [version])
-  }
-
   const bundledSpecsByVersion = {}
   const bundleCacheDir = path.join(PUBLIC_API_DIR, '.cache', 'openapi-diff')
+  const aggregateCacheDir = path.join(PUBLIC_API_DIR, '.cache', 'aggregates')
   for (const version of versionsToPrepare) {
-    const rootSpec = path.join(OPENAPI_ROOT_DIR, `ocpi-${version}`, 'openapi.yaml')
-    if (!fileExists(rootSpec)) {
-      throw new Error(`Missing OpenAPI root spec for version ${version}: ${rootSpec}`)
-    }
+    const rootSpec = path.join(aggregateCacheDir, `ocpi-${version}`, 'openapi.yaml')
+    runNodeScript('generate-root-openapi.js', [version, '--output', rootSpec])
 
     const bundledSpec = path.join(bundleCacheDir, `ocpi-${version}.yaml`)
     bundleOpenApiYaml(rootSpec, bundledSpec)
