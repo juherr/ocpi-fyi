@@ -5,6 +5,7 @@ const { execFileSync } = require("child_process");
 const ROOT_DIR = process.cwd();
 const OPENAPI_ROOT_DIR = path.join(ROOT_DIR, "openapi");
 const PUBLIC_API_DIR = path.join(ROOT_DIR, "public", "api");
+const AGGREGATE_CACHE_DIR = path.join(PUBLIC_API_DIR, ".cache", "aggregates");
 const REDOCLY = path.join(ROOT_DIR, "node_modules", ".bin", "redocly");
 
 function ensureDir(dirPath) {
@@ -26,7 +27,6 @@ function listOpenApiVersions() {
     .filter((entry) => entry.isDirectory() && entry.name.startsWith("ocpi-"))
     .map((entry) => ({
       version: entry.name.replace(/^ocpi-/, ""),
-      rootSpec: path.join(OPENAPI_ROOT_DIR, entry.name, "openapi.yaml"),
     }))
     .sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }));
 }
@@ -136,8 +136,9 @@ function main() {
 
   ensureDir(PUBLIC_API_DIR);
 
-  for (const { version, rootSpec } of versions) {
-    runNodeScript("generate-root-openapi.js", [version]);
+  for (const { version } of versions) {
+    const rootSpec = path.join(AGGREGATE_CACHE_DIR, `ocpi-${version}`, "openapi.yaml");
+    runNodeScript("generate-root-openapi.js", [version, "--output", rootSpec]);
     const outVersionDir = path.join(PUBLIC_API_DIR, version);
     const outHtmlPath = path.join(outVersionDir, "index.html");
 

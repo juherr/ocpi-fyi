@@ -11,7 +11,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'scripts/check_openapi.sh'
-      - 'tools/test-openapi-invariants.js'
+      - 'scripts/publish_pr.sh'
+      - 'tools/**'
       - '.github/workflows/openapi-validation.yml'
   pull_request:
     paths:
@@ -23,7 +24,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'scripts/check_openapi.sh'
-      - 'tools/test-openapi-invariants.js'
+      - 'scripts/publish_pr.sh'
+      - 'tools/**'
       - '.github/workflows/openapi-validation.yml'
 
 jobs:

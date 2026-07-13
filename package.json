@@ -27,9 +27,11 @@
     "build:site": "npm run build:antora && npm run build:redoc && npm run build:openapi-diff && npm run build:swagger && npm run build:search",
     "build:site:worktree": "bash scripts/build_site_worktree.sh",
     "check:github": "bash scripts/check_github_state.sh",
-    "test": "npm run test:openapi-invariants",
+    "publish:pr": "bash scripts/publish_pr.sh",
+    "test": "npm run test:openapi-invariants && npm run test:maintenance-tools",
     "test:openapi-invariants": "node tools/test-openapi-invariants.js",
-    "validate:openapi": "npm run test:openapi-invariants && bash scripts/check_openapi.sh"
+    "test:maintenance-tools": "node --test tools/test-maintenance-tools.js",
+    "validate:openapi": "npm test && bash scripts/check_openapi.sh"
   },
   "repository": {
     "type": "git",

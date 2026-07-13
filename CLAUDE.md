@@ -25,13 +25,15 @@ Maintenance reminder:
 - `openapi/DECISIONS.md` records intentional local OpenAPI modeling and compatibility choices.
 - `openapi/MAINTENANCE.md` explains when to run each OpenAPI validation, build, audit, and publication command.
 - `openapi/upstream-revisions.yaml` pins the normative and official OpenAPI commits used for audits.
-- `npm run validate:openapi` runs invariant tests and all pinned OpenAPI validators; append `-- <version>` for a focused run.
+- `npm run validate:openapi` runs invariant tests and all pinned OpenAPI validators; append `-- <version>` for a focused run or `-- --changed` for affected versions only.
 - `npm run build:site:worktree` builds the full site from Conductor worktrees through a temporary standalone clone.
 - Run `npm run check:github` before publishing to confirm the current branch, tracking state, worktree, and pull request.
+- Run `npm run publish:pr -- --title "..." --body-file <path>` to push a committed branch, wait for GitHub consistency, and create its pull request.
 - An optional `aggregate.json` in a version directory customizes generated root metadata and excludes add-on modules from the core aggregate.
 - `npm run build:redoc` generates one Redoc page per version in `public/api/<version>/index.html`.
 - `npm run build:openapi-diff` generates OpenAPI comparison pages under `public/api/<version>/diff/` for configured baselines.
 - `npm run build:swagger` generates one Swagger UI page per version in `public/api/<version>/swagger/index.html`.
+- Redoc, API Diff, and Swagger UI use disposable aggregates under `public/api/.cache` and must not rewrite tracked root OpenAPI files.
 - `npm run build:search` generates a Pagefind static index under `public/pagefind/`.
 - Pagefind indexing is limited to `/ocpi/**/*.html` (spec pages only); `/api/` pages are intentionally excluded.
 - If `/ocpi/latest/` pages exist, they are excluded from Pagefind indexing to avoid duplicate results.

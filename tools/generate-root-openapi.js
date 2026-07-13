@@ -1,6 +1,8 @@
 // Generates a root OpenAPI spec (openapi.yaml) by aggregating paths from OCPI module specs.
 // Usage:
 //   node tools/generate-root-openapi.js 2.3.0
+//   node tools/generate-root-openapi.js 2.3.0 --output public/api/.cache/aggregates/ocpi-2.3.0/openapi.yaml
+//   node tools/generate-root-openapi.js 2.3.0 --check
 //   OCPI_VERSION=2.3.0 node tools/generate-root-openapi.js
 //
 // Requirements:
@@ -17,9 +19,43 @@ try {
   process.exit(1);
 }
 
-// ---- Version handling -------------------------------------------------------
-const versionArg = process.argv[2];
-const VERSION = versionArg || process.env.OCPI_VERSION;
+// ---- Arguments --------------------------------------------------------------
+function parseArguments(args) {
+  const options = { check: false, output: null, version: null };
+
+  for (let index = 0; index < args.length; index++) {
+    const argument = args[index];
+    if (argument === "--check") {
+      options.check = true;
+    } else if (argument === "--output") {
+      options.output = args[++index];
+      if (!options.output) {
+        throw new Error("--output requires a path");
+      }
+    } else if (argument === "--help" || argument === "-h") {
+      console.log("Usage: node tools/generate-root-openapi.js <version> [--output <path>] [--check]");
+      process.exit(0);
+    } else if (argument.startsWith("-")) {
+      throw new Error(`unknown option: ${argument}`);
+    } else if (!options.version) {
+      options.version = argument;
+    } else {
+      throw new Error(`unexpected argument: ${argument}`);
+    }
+  }
+
+  return options;
+}
+
+let options;
+try {
+  options = parseArguments(process.argv.slice(2));
+} catch (error) {
+  console.error(`ERROR: ${error.message}`);
+  process.exit(1);
+}
+
+const VERSION = options.version || process.env.OCPI_VERSION;
 
 if (!VERSION) {
   console.error("ERROR: OCPI version is required. Example: node tools/generate-root-openapi.js 2.3.0");
@@ -28,7 +64,8 @@ if (!VERSION) {
 
 // ---- Paths ------------------------------------------------------------------
 const VERSION_DIR = path.join("openapi", `ocpi-${VERSION}`);
-const OUTPUT_FILE = path.join(VERSION_DIR, "openapi.yaml");
+const CANONICAL_OUTPUT_FILE = path.join(VERSION_DIR, "openapi.yaml");
+const OUTPUT_FILE = options.output ? path.resolve(options.output) : path.resolve(CANONICAL_OUTPUT_FILE);
 const AGGREGATE_CONFIG_FILE = path.join(VERSION_DIR, "aggregate.json");
 
 // ---- Metadata ---------------------------------------------------------------
@@ -72,6 +109,23 @@ function isSharedFile(filePath) {
 
 function readYaml(filePath) {
   return yaml.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function relativeRef(fromFile, toFile) {
+  const relativePath = path.relative(path.dirname(fromFile), toFile).split(path.sep).join("/");
+  return relativePath.startsWith(".") ? relativePath : `./${relativePath}`;
+}
+
+function canonicalize(value) {
+  if (Array.isArray(value)) {
+    return value.map(canonicalize);
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value).sort().map((key) => [key, canonicalize(value[key])])
+    );
+  }
+  return value;
 }
 
 function listModuleSpecs(dir) {
@@ -133,7 +187,7 @@ function main() {
           type: "apiKey",
           in: "header",
           name: "Authorization",
-          description:
+          description: aggregateConfig.tokenAuthDescription ||
             "OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.",
         },
       },
@@ -164,7 +218,7 @@ function main() {
         }
 
         root.paths[p] = {
-          $ref: `./${fileName}#/paths/${toJsonPointerKey(p)}`,
+          $ref: `${relativeRef(OUTPUT_FILE, filePath)}#/paths/${toJsonPointerKey(p)}`,
         };
       }
     }
@@ -180,7 +234,7 @@ function main() {
         }
 
         root.webhooks[key] = {
-          $ref: `./${fileName}#/webhooks/${toJsonPointerKey(name)}`,
+          $ref: `${relativeRef(OUTPUT_FILE, filePath)}#/webhooks/${toJsonPointerKey(name)}`,
         };
       }
     }
@@ -193,6 +247,23 @@ function main() {
     delete root.webhooks;
   }
 
+  if (options.check) {
+    if (!fs.existsSync(OUTPUT_FILE)) {
+      console.error(`ERROR: aggregate is missing: ${OUTPUT_FILE}`);
+      process.exit(1);
+    }
+
+    const current = canonicalize(readYaml(OUTPUT_FILE));
+    const expected = canonicalize(root);
+    if (JSON.stringify(current) !== JSON.stringify(expected)) {
+      console.error(`ERROR: aggregate is out of date: ${OUTPUT_FILE}`);
+      process.exit(1);
+    }
+    console.log(`✔ Aggregate is up to date: ${OUTPUT_FILE}`);
+    return;
+  }
+
+  fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
   fs.writeFileSync(OUTPUT_FILE, yaml.stringify(root), "utf8");
 
   console.log(`✔ Generated ${OUTPUT_FILE}`);
