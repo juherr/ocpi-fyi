@@ -216,5 +216,5 @@ components:
         "CONNECTED": "Party is connected."
         "OFFLINE": "Party is currently not connected."
         "PLANNED": "Connection to this party is planned, but has never been connected."
-        "SUSPENDED": "Party is now longer active, will never connect anymore."
+        "SUSPENDED": "Party is no longer active, will never connect anymore."
       description: Status of a party's connection to the Hub.
