@@ -536,6 +536,6 @@ components:
       - N/A
       description: Whether taxes are included in this Tariff's prices.
       x-enumDescriptions:
-        YES: Taxes are included in the prices in this Tariff.
-        NO: Taxes are not included, and will be added on top of the prices in this Tariff.
+        "YES": Taxes are included in the prices in this Tariff.
+        "NO": Taxes are not included, and will be added on top of the prices in this Tariff.
         "N/A": No taxes are applicable to this Tariff.

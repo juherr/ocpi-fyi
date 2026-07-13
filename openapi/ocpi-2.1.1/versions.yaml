@@ -166,15 +166,15 @@ components:
             - sessions
             - tariffs
             - tokens
+          x-enumDescriptions:
+            cdrs: CDRs module
+            commands: Commands module
+            credentials: Credentials & Registration module (required for all implementations)
+            locations: Locations module
+            sessions: Sessions module
+            tariffs: Tariffs module
+            tokens: Tokens module
         - type: string
-      x-enumDescriptions:
-        cdrs: CDRs module
-        commands: Commands module
-        credentials: Credentials & Registration module (required for all implementations)
-        locations: Locations module
-        sessions: Sessions module
-        tariffs: Tariffs module
-        tokens: Tokens module
       description: The identifier of an OCPI module.
     VersionNumber:
       type: string

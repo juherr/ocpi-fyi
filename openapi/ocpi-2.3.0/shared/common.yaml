@@ -135,14 +135,7 @@ components:
     # ---- Primitive Types ----
 
     DateTime:
-      type: string
-      maxLength: 25
-      pattern: '^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?Z?$'
-      description: >-
-        Timestamp formatted as an OCPI-restricted RFC 3339 string in UTC. The UTC
-        designator Z is optional, fractional seconds MAY be used, and offsets such
-        as +00:00 are not allowed.
-      example: "2024-01-15T10:30:00Z"
+      $ref: './schemas/types.yaml#/components/schemas/DateTime'
 
     CiString:
       $ref: './schemas/types.yaml#/components/schemas/CiString'
