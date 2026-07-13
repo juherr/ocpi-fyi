@@ -15,13 +15,11 @@ components:
       description: Echoed from the request. Same unique request ID.
       schema:
         type: string
-        format: uuid
 
     X-Correlation-ID:
       description: Echoed from the request. Same correlation ID.
       schema:
         type: string
-        format: uuid
 
     X-Total-Count:
       description: >-
@@ -60,7 +58,6 @@ components:
         The response to this request SHALL contain the same ID.
       schema:
         type: string
-        format: uuid
       example: "f5be3127-a31e-4e8c-84c3-0e4c89a48d71"
 
     X-Correlation-ID:
@@ -72,7 +69,6 @@ components:
         Every response to this request SHALL contain the same ID.
       schema:
         type: string
-        format: uuid
       example: "9d863a1c-e981-4fc1-b3be-8c39ec35bc38"
 
     OCPI-from-country-code:

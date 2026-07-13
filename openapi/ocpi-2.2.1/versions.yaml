@@ -183,6 +183,9 @@ components:
       enum:
       - SENDER
       - RECEIVER
+      x-enumDescriptions:
+        "SENDER": "Sender Interface implementation. Interface implemented by the owner of data, so the Receiver can Pull information from the data Sender/owner."
+        "RECEIVER": "Receiver Interface implementation. Interface implemented by the receiver of data, so the Sender/owner can Push information to the Receiver."
       description: The role of an interface. SENDER is implemented by the owner of
         data (for Pull). RECEIVER is implemented by the receiver of data (for Push).
     ModuleID:
@@ -199,15 +202,31 @@ components:
         - tariffs
         - tokens
       - type: string
+      x-enumDescriptions:
+        cdrs: CDRs module
+        chargingprofiles: Charging Profiles module
+        commands: Commands module
+        credentials: >-
+          Credentials & Registration module (required for all implementations).
+          The `role` field has no function for this module.
+        hubclientinfo: Hub Client Info module
+        locations: Locations module
+        sessions: Sessions module
+        tariffs: Tariffs module
+        tokens: Tokens module
       description: The identifier of an OCPI module.
     VersionNumber:
-      anyOf:
-      - type: string
-        enum:
-        - '2.0'
-        - '2.1'
-        - 2.1.1
-        - '2.2'
-        - 2.2.1
-      - type: string
+      type: string
+      enum:
+      - '2.0'
+      - '2.1'
+      - '2.1.1'
+      - '2.2'
+      - '2.2.1'
+      x-enumDescriptions:
+        "2.0": "OCPI version 2.0"
+        "2.1": "OCPI version 2.1 (DEPRECATED, do not use, use 2.1.1 instead)"
+        "2.1.1": "OCPI version 2.1.1"
+        "2.2": "OCPI version 2.2 (DEPRECATED, do not use, use 2.2.1 instead)"
+        "2.2.1": "OCPI version 2.2.1 (this version)"
       description: List of known OCPI version numbers.

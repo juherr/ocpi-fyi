@@ -382,8 +382,7 @@ components:
           minLength: 2
           maxLength: 2
         default_profile_type:
-          type: string
-          maxLength: 32
+          $ref: ./sessions.yaml#/components/schemas/ProfileType
         energy_contract:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/EnergyContract
         last_updated:
@@ -405,10 +404,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the eMSP that owns this Token.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the eMSP that owns this Token.
         uid:
@@ -443,6 +444,7 @@ components:
           $ref: ./shared/schemas/tokens.yaml#/components/schemas/WhitelistType
         language:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO 639-1 language code for the Token owner's preferred interface
             language.

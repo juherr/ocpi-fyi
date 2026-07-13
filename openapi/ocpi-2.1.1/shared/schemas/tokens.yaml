@@ -30,12 +30,13 @@ components:
           description: Identifies the connectors within the given EVSEs.
       additionalProperties: true
     TokenType:
-      anyOf:
-        - type: string
-          enum:
-            - OTHER
-            - RFID
-        - type: string
+      type: string
+      enum:
+        - OTHER
+        - RFID
+      x-enumDescriptions:
+        OTHER: Other type of token
+        RFID: RFID Token
       description: Type of charging token.
     WhitelistType:
       type: string
@@ -44,6 +45,11 @@ components:
         - ALLOWED
         - ALLOWED_OFFLINE
         - NEVER
+      x-enumDescriptions:
+        ALWAYS: Token always has to be whitelisted, realtime authorization is not possible/allowed.
+        ALLOWED: It is allowed to whitelist the token, realtime authorization is also allowed.
+        ALLOWED_OFFLINE: Whitelisting is only allowed when CPO cannot reach the eMSP (communication between CPO and eMSP is offline)
+        NEVER: Whitelisting is forbidden, only realtime authorization is allowed. Token should always be authorized by the eMSP.
       description: Defines the whitelist behavior for a Token.
     AllowedType:
       type: string
@@ -53,4 +59,10 @@ components:
         - EXPIRED
         - NO_CREDIT
         - NOT_ALLOWED
+      x-enumDescriptions:
+        ALLOWED: This Token is allowed to charge at this location.
+        BLOCKED: This Token is blocked.
+        EXPIRED: This Token has expired.
+        NO_CREDIT: This Token belongs to an account that has not enough credits to charge at the given location.
+        NOT_ALLOWED: Token is valid, but is not allowed to charge at the given location.
       description: Authorization status of a Token.

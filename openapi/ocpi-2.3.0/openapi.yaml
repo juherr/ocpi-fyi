@@ -1,10 +1,13 @@
 openapi: 3.1.0
 info:
-  title: OCPI 2.3.0 API
+  title: OCPI 2.3.0 Edition 2 Core API
   version: 2.3.0
   license:
     name: Creative Commons Attribution-NoDerivatives 4.0 International
     url: https://creativecommons.org/licenses/by-nd/4.0/
+  description: Aggregated OpenAPI description for the OCPI 2.3.0 Edition 2 core
+    specification.
+  x-ocpi-edition: 2
 security:
   - TokenAuth: []
 paths:
@@ -16,6 +19,8 @@ paths:
     $ref: ./charging-profiles.yaml#/paths/~1chargingprofiles~1{session_id}
   /chargingprofiles/{session_id}/activeprofile:
     $ref: ./charging-profiles.yaml#/paths/~1chargingprofiles~1{session_id}~1activeprofile
+  /commands/{command}:
+    $ref: ./commands.yaml#/paths/~1commands~1{command}
   /commands/CANCEL_RESERVATION:
     $ref: ./commands.yaml#/paths/~1commands~1CANCEL_RESERVATION
   /commands/RESERVE_NOW:
@@ -32,6 +37,10 @@ paths:
     $ref: ./hub-client-info.yaml#/paths/~1hubclientinfo
   /hubclientinfo/{country_code}/{party_id}:
     $ref: ./hub-client-info.yaml#/paths/~1hubclientinfo~1{country_code}~1{party_id}
+  /invoicereconciliation:
+    $ref: ./invoice-reconciliation.yaml#/paths/~1invoicereconciliation
+  /invoicereconciliation/{country_code}/{party_id}/{id}:
+    $ref: ./invoice-reconciliation.yaml#/paths/~1invoicereconciliation~1{country_code}~1{party_id}~1{id}
   /locations:
     $ref: ./locations.yaml#/paths/~1locations
   /locations/{location_id}:
@@ -46,26 +55,6 @@ paths:
     $ref: ./locations.yaml#/paths/~1locations~1{country_code}~1{party_id}~1{location_id}~1{evse_uid}
   /locations/{country_code}/{party_id}/{location_id}/{evse_uid}/{connector_id}:
     $ref: ./locations.yaml#/paths/~1locations~1{country_code}~1{party_id}~1{location_id}~1{evse_uid}~1{connector_id}
-  /payments/terminals:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals
-  /payments/terminals/{terminal_id}:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals~1{terminal_id}
-  /payments/terminals/activate:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals~1activate
-  /payments/terminals/{terminal_id}/deactivate:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals~1{terminal_id}~1deactivate
-  /payments/terminals/receiver:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals~1receiver
-  /payments/terminals/receiver/{terminal_id}:
-    $ref: ./payments.yaml#/paths/~1payments~1terminals~1receiver~1{terminal_id}
-  /payments/financial-advice-confirmations:
-    $ref: ./payments.yaml#/paths/~1payments~1financial-advice-confirmations
-  /payments/financial-advice-confirmations/{fac_id}:
-    $ref: ./payments.yaml#/paths/~1payments~1financial-advice-confirmations~1{fac_id}
-  /payments/financial-advice-confirmations/receiver:
-    $ref: ./payments.yaml#/paths/~1payments~1financial-advice-confirmations~1receiver
-  /payments/financial-advice-confirmations/receiver/{fac_id}:
-    $ref: ./payments.yaml#/paths/~1payments~1financial-advice-confirmations~1receiver~1{fac_id}
   /sessions:
     $ref: ./sessions.yaml#/paths/~1sessions
   /sessions/{session_id}/charging_preferences:
@@ -101,4 +90,8 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: OCPI credentials token passed as `Token
+        <base64-encoded-credentials-token>` in the Authorization header.
+externalDocs:
+  description: OCPI 2.3.0 Edition 2 core specification
+  url: https://github.com/ocpi/ocpi/tree/2.3.0/release/core

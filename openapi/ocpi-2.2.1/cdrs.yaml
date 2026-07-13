@@ -206,10 +206,12 @@ components:
       properties:
         country_code:
           type: string
+          minLength: 2
           maxLength: 2
           description: ISO-3166 alpha-2 country code of the CPO.
         party_id:
           type: string
+          minLength: 3
           maxLength: 3
           description: ID of the CPO.
         id:
@@ -240,6 +242,7 @@ components:
           description: Identification of the Meter inside the Charge Point.
         currency:
           type: string
+          minLength: 3
           maxLength: 3
           description: ISO-4217 code of the currency.
         tariffs:

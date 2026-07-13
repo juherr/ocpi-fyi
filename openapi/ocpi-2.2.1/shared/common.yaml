@@ -63,12 +63,7 @@ components:
     # ---- Primitive Types ----
 
     DateTime:
-      type: string
-      format: date-time
-      description: >-
-        Timestamp formatted as RFC 3339 string in UTC.
-        Fractional seconds MAY be used.
-      example: "2024-01-15T10:30:00Z"
+      $ref: './schemas/types.yaml#/components/schemas/DateTime'
 
     CiString:
       type: string
@@ -109,42 +104,10 @@ components:
       additionalProperties: true
 
     GeoLocation:
-      type: object
-      description: Geographic coordinates (WGS 84).
-      required:
-        - latitude
-        - longitude
-      properties:
-        latitude:
-          type: string
-          maxLength: 10
-          description: Latitude in decimal degree (e.g. "50.770774").
-          pattern: "^-?[0-9]{1,2}\\.[0-9]{1,8}$"
-        longitude:
-          type: string
-          maxLength: 11
-          description: Longitude in decimal degree (e.g. "-126.104965").
-          pattern: "^-?[0-9]{1,3}\\.[0-9]{1,8}$"
-      additionalProperties: true
+      $ref: './schemas/locations.yaml#/components/schemas/GeoLocation'
 
     AdditionalGeoLocation:
-      type: object
-      description: An additional geographic location with an optional human-readable name.
-      required:
-        - latitude
-        - longitude
-      properties:
-        latitude:
-          type: string
-          maxLength: 10
-          description: Latitude in decimal degree.
-        longitude:
-          type: string
-          maxLength: 11
-          description: Longitude in decimal degree.
-        name:
-          $ref: '#/components/schemas/DisplayText'
-      additionalProperties: true
+      $ref: './schemas/locations.yaml#/components/schemas/AdditionalGeoLocation'
 
     BusinessDetails:
       type: object
@@ -224,29 +187,7 @@ components:
       additionalProperties: true
 
     RegularHours:
-      type: object
-      description: Regular recurring operation or access hours.
-      required:
-        - weekday
-        - period_begin
-        - period_end
-      properties:
-        weekday:
-          type: integer
-          minimum: 1
-          maximum: 7
-          description: Day of the week, 1=Monday, 7=Sunday.
-        period_begin:
-          type: string
-          maxLength: 5
-          pattern: "^[0-2][0-9]:[0-5][0-9]$"
-          description: Begin of the regular period (HH:MM, 24h format).
-        period_end:
-          type: string
-          maxLength: 5
-          pattern: "^[0-2][0-9]:[0-5][0-9]$"
-          description: End of the regular period (HH:MM, 24h format).
-      additionalProperties: true
+      $ref: './schemas/locations.yaml#/components/schemas/RegularHours'
 
     ExceptionalPeriod:
       type: object
@@ -323,49 +264,13 @@ components:
     # ---- Shared Enums ----
 
     Role:
-      type: string
-      enum:
-        - CPO
-        - EMSP
-        - HUB
-        - NAP
-        - NSP
-        - OTHER
-        - SCSP
-      description: The role of a party in the EV charging ecosystem.
+      $ref: './schemas/types.yaml#/components/schemas/Role'
 
     ImageCategory:
-      anyOf:
-        - type: string
-          enum:
-            - CHARGER
-            - ENTRANCE
-            - LOCATION
-            - NETWORK
-            - OPERATOR
-            - OTHER
-            - OWNER
-        - type: string
-      description: The category of an image to obtain the correct usage.
+      $ref: './schemas/locations.yaml#/components/schemas/ImageCategory'
 
     EnergySourceCategory:
-      type: string
-      enum:
-        - NUCLEAR
-        - GENERAL_FOSSIL
-        - COAL
-        - GAS
-        - GENERAL_GREEN
-        - SOLAR
-        - WIND
-        - WATER
-      description: Categories of energy sources.
+      $ref: './schemas/locations.yaml#/components/schemas/EnergySourceCategory'
 
     EnvironmentalImpactCategory:
-      anyOf:
-        - type: string
-          enum:
-            - NUCLEAR_WASTE
-            - CARBON_DIOXIDE
-        - type: string
-      description: Categories of environmental impact values.
+      $ref: './schemas/locations.yaml#/components/schemas/EnvironmentalImpactCategory'

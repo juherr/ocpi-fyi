@@ -1,0 +1,12 @@
+# Suggested commands
+- Install dependencies: `npm ci`.
+- Generate Antora inputs: `npm run generate:antora`.
+- Build specification pages: `npm run build:antora`.
+- Build Redoc: `npm run build:redoc`.
+- Build Swagger UI: `npm run build:swagger`.
+- Build OpenAPI diffs: `npm run build:openapi-diff`.
+- Build search index: `npm run build:search`.
+- Build complete site: `npm run build:site`.
+- Validate OpenAPI set: `scripts/check_openapi.sh` (requires Redocly, Swagger CLI, Spectral, OpenAPI Generator CLI).
+- Validate imported OCPI JSON/links from a specification's `releases/` directory: `make check_json`, `make check_asciidoc`.
+- There is no project test suite: `npm test` intentionally fails with “no test specified”.

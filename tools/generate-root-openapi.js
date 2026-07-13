@@ -29,6 +29,7 @@ if (!VERSION) {
 // ---- Paths ------------------------------------------------------------------
 const VERSION_DIR = path.join("openapi", `ocpi-${VERSION}`);
 const OUTPUT_FILE = path.join(VERSION_DIR, "openapi.yaml");
+const AGGREGATE_CONFIG_FILE = path.join(VERSION_DIR, "aggregate.json");
 
 // ---- Metadata ---------------------------------------------------------------
 const ROOT_INFO = {
@@ -39,6 +40,14 @@ const ROOT_INFO = {
     url: "https://creativecommons.org/licenses/by-nd/4.0/",
   },
 };
+
+function readAggregateConfig() {
+  if (!fs.existsSync(AGGREGATE_CONFIG_FILE)) {
+    return {};
+  }
+
+  return JSON.parse(fs.readFileSync(AGGREGATE_CONFIG_FILE, "utf8"));
+}
 
 // Optional servers
 // const SERVERS = [{ url: "https://api.example.com" }];
@@ -92,13 +101,17 @@ function listModuleSpecs(dir) {
 // ---- Main -------------------------------------------------------------------
 function main() {
   const baseDirAbs = path.resolve(VERSION_DIR);
+  const aggregateConfig = readAggregateConfig();
+  const excludedModules = new Set(aggregateConfig.exclude || []);
 
   if (!fs.existsSync(baseDirAbs)) {
     console.error(`ERROR: directory not found: ${VERSION_DIR}`);
     process.exit(1);
   }
 
-  const specFiles = listModuleSpecs(baseDirAbs).sort((a, b) => a.localeCompare(b));
+  const specFiles = listModuleSpecs(baseDirAbs)
+    .filter((filePath) => !excludedModules.has(path.basename(filePath)))
+    .sort((a, b) => a.localeCompare(b));
 
   if (specFiles.length === 0) {
     console.error(`ERROR: no module specs found in ${VERSION_DIR}`);
@@ -107,7 +120,10 @@ function main() {
 
   const root = {
     openapi: "3.1.0",
-    info: ROOT_INFO,
+    info: {
+      ...ROOT_INFO,
+      ...(aggregateConfig.info || {}),
+    },
     security: [{ TokenAuth: [] }],
     paths: {},
     webhooks: {},
@@ -118,12 +134,16 @@ function main() {
           in: "header",
           name: "Authorization",
           description:
-            "OCPI credentials token passed in the Authorization header.",
+            "OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.",
         },
       },
     },
     // servers: SERVERS,
   };
+
+  if (aggregateConfig.externalDocs) {
+    root.externalDocs = aggregateConfig.externalDocs;
+  }
 
   const collisions = [];
   let totalPaths = 0;

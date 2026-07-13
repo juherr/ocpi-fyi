@@ -1,0 +1,14 @@
+{
+  "info": {
+    "title": "OCPI 2.3.0 Edition 2 Core API",
+    "description": "Aggregated OpenAPI description for the OCPI 2.3.0 Edition 2 core specification.",
+    "x-ocpi-edition": 2
+  },
+  "externalDocs": {
+    "description": "OCPI 2.3.0 Edition 2 core specification",
+    "url": "https://github.com/ocpi/ocpi/tree/2.3.0/release/core"
+  },
+  "exclude": [
+    "payments.yaml"
+  ]
+}

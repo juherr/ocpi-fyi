@@ -1,0 +1,6 @@
+# Shared component libraries are referenced by API descriptions and have no paths of their own.
+extends:
+  - ./redocly.yaml
+
+rules:
+  no-unused-components: off

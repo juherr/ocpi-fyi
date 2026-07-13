@@ -18,8 +18,7 @@ components:
       description: >-
         Only return objects that have last_updated after or equal to this Date/Time (inclusive).
       schema:
-        type: string
-        format: date-time
+        $ref: ./schemas/types.yaml#/components/schemas/DateTime
 
     date_to:
       name: date_to
@@ -28,8 +27,7 @@ components:
       description: >-
         Only return objects that have last_updated up to this Date/Time, but not including (exclusive).
       schema:
-        type: string
-        format: date-time
+        $ref: ./schemas/types.yaml#/components/schemas/DateTime
 
     offset:
       name: offset
@@ -49,7 +47,7 @@ components:
         Maximum number of objects to GET. The server might return fewer objects.
       schema:
         type: integer
-        minimum: 0
+        minimum: 1
 
     # ---- Client Owned Object Path Parameters ----
 

@@ -337,6 +337,11 @@ components:
         - FLAT
         - PARKING_TIME
         - TIME
+      x-enumDescriptions:
+        ENERGY: "defined in kWh, step_size multiplier: 1 Wh"
+        FLAT: flat fee, no unit
+        PARKING_TIME: "time not charging: defined in hours, step_size multiplier: 1 second"
+        TIME: "time charging: defined in hours, step_size multiplier: 1 second"
       description: "The dimension being priced: ENERGY (kWh), FLAT (no unit),
         PARKING_TIME (hours not charging), TIME (hours charging)."
     DayOfWeek:
@@ -349,4 +354,12 @@ components:
         - FRIDAY
         - SATURDAY
         - SUNDAY
+      x-enumDescriptions:
+        MONDAY: Monday
+        TUESDAY: Tuesday
+        WEDNESDAY: Wednesday
+        THURSDAY: Thursday
+        FRIDAY: Friday
+        SATURDAY: Saturday
+        SUNDAY: Sunday
       description: Day of the week.

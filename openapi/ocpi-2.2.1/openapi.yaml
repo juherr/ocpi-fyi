@@ -81,4 +81,6 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: OCPI credentials token passed in the Authorization header.
+      description: >-
+        OCPI credentials token passed as `Token <base64-encoded-credentials-token>`
+        in the Authorization header.
