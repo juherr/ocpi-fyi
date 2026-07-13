@@ -3,7 +3,7 @@ info:
   title: OCPI 2.3.0 - Payments
   description: The Payments module provides information about payment terminals and
     financial advice confirmations. Data owner is typically the PTP (Payment Terminal
-    Provider. In this aggregated description, Receiver operations use an explicit
+    Provider). In this aggregated description, Receiver operations use an explicit
     /receiver path segment to distinguish them from Sender operations. This path
     convention is local to this aggregate and is not prescribed by OCPI.
   version: 2.3.0
