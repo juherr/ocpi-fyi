@@ -490,11 +490,11 @@ components:
       - PARKING_TIME
       - TIME
       description: 'The dimension being priced: ENERGY (kWh), FLAT (no unit), PARKING_TIME
-        (hours not charging), TIME (hours charging).'
+        (hours during which the vehicle is not requesting power), TIME (hours charging).'
       x-enumDescriptions:
         ENERGY: "Defined in kWh, step_size multiplier: 1 Wh"
         FLAT: "Flat fee without unit for step_size"
-        PARKING_TIME: "Time not charging: defined in hours, step_size multiplier: 1 second"
+        PARKING_TIME: "Time during which the vehicle is not requesting power: defined in hours, step_size multiplier: 1 second"
         TIME: "Time charging: defined in hours, step_size multiplier: 1 second. Can also be used in combination with a RESERVATION restriction to describe the price of the reservation time."
 
 

@@ -187,7 +187,7 @@ components:
           description: "Nature of the value: Start, End, Intermediate, or other."
         plain_data:
           type: string
-          maxLength: 512
+          maxLength: 5000
           description: The un-encoded string of data.
         signed_data:
           type: string
@@ -234,10 +234,8 @@ components:
         MIN_CURRENT: "Sum of the minimum current over all phases, reached during this ChargingPeriod, when negative, current has flowed from the EV to the grid. Defined in A (Ampere)."
         MAX_POWER: "Maximum power reached during this ChargingPeriod: defined in kW (Kilowatt)."
         MIN_POWER: "Minimum power reached during this ChargingPeriod: defined in kW (Kilowatt), when negative, the power has flowed from the EV to the grid."
-        PARKING_TIME: "Time during this ChargingPeriod not charging: defined in hours, default step_size multiplier is 1 second."
+        PARKING_TIME: "Time in this ChargingPeriod during which the vehicle is not requesting power. Defined in hours, default step_size multiplier is 1 second."
         POWER: "(Session Only) Average power during this ChargingPeriod: defined in kW (Kilowatt). When negative, the power is flowing from the EV to the grid."
-        RESERVATION_TIME: "Time during this ChargingPeriod the Charge Point has been reserved time, defined in hours default step_size multiplier is 1 second."
-        RESERVATION_EXPIRES: "Time during this ChargingPeriod Charge Point has been reserved and not yet been in use for this customer: defined in hours, default step_size multiplier is 1 second."
-        RESERVATION_OVERTIME: "Time after the reservation during a ChargingPeriod that the session continues after the reserved time slot, defined in hours, default step_size multiplier is 1 second."
+        RESERVATION_TIME: "Time in this ChargingPeriod during which the EVSE has been reserved and not yet been in use for this customer. Defined in hours, default step_size multiplier is 1 second."
         STATE_OF_CHARGE: "(Session Only) Current state of charge of the EV, in percentage, values allowed: 0 to 100."
-        TIME: "Time charging during this ChargingPeriod: defined in hours, default step_size multiplier is 1 second."
+        TIME: "Time charging in this ChargingPeriod. Defined in hours, default step_size multiplier is 1 second."

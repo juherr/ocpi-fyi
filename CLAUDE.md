@@ -22,6 +22,7 @@ Maintenance reminder:
 ## Antora + API Explorer Integration Notes
 
 - OpenAPI source directories are versioned under `openapi/ocpi-x.y.z`.
+- An optional `aggregate.json` in a version directory customizes generated root metadata and excludes add-on modules from the core aggregate.
 - `npm run build:redoc` generates one Redoc page per version in `public/api/<version>/index.html`.
 - `npm run build:openapi-diff` generates OpenAPI comparison pages under `public/api/<version>/diff/` for configured baselines.
 - `npm run build:swagger` generates one Swagger UI page per version in `public/api/<version>/swagger/index.html`.

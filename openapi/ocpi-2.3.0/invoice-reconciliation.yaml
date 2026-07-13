@@ -1,0 +1,328 @@
+openapi: 3.1.0
+info:
+  title: OCPI 2.3.0 Edition 2 - Invoice Reconciliation
+  description: >-
+    The Invoice Reconciliation module enables CPOs and MSPs to publish records
+    that associate an invoice with the CDRs covered by that invoice.
+  version: 2.3.0
+  license:
+    name: Creative Commons Attribution-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nd/4.0/
+externalDocs:
+  description: OCPI 2.3.0 Edition 2 Invoice Reconciliation specification
+  url: https://github.com/ocpi/ocpi/blob/2.3.0/release/core/mod_invoice_reconciliation.asciidoc
+servers:
+- url: https://example.com/ocpi/2.3.0
+  description: Example OCPI server
+security:
+- TokenAuth: []
+paths:
+  /invoicereconciliation:
+    parameters:
+    # Correlation headers
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Correlation-ID
+    # Routing headers
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-party-id
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-party-id
+    get:
+      operationId: getInvoiceReconciliationRecords
+      summary: Get Invoice Reconciliation Records (Sender)
+      description: >-
+        Fetch InvoiceReconciliationRecord objects last updated between date_from
+        and date_to (paginated).
+      tags:
+      - Invoice Reconciliation - Sender
+      parameters:
+      - $ref: ./shared/parameters.yaml#/components/parameters/date_from
+      - $ref: ./shared/parameters.yaml#/components/parameters/date_to
+      - $ref: ./shared/parameters.yaml#/components/parameters/offset
+      - $ref: ./shared/parameters.yaml#/components/parameters/limit
+      responses:
+        '200':
+          description: List of InvoiceReconciliationRecord objects.
+          headers:
+            # Correlation headers
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+            # Pagination headers
+            X-Total-Count:
+              $ref: ./shared/headers.yaml#/components/headers/X-Total-Count
+            X-Limit:
+              $ref: ./shared/headers.yaml#/components/headers/X-Limit
+            Link:
+              $ref: ./shared/headers.yaml#/components/headers/Link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceReconciliationRecordListResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+    post:
+      operationId: postInvoiceReconciliationRecord
+      summary: Create Invoice Reconciliation Record (Receiver)
+      description: Create a new InvoiceReconciliationRecord in the receiver's system.
+      tags:
+      - Invoice Reconciliation - Receiver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceReconciliationRecord'
+      responses:
+        '201':
+          description: InvoiceReconciliationRecord created.
+          headers:
+            # Correlation headers
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+          content:
+            application/json:
+              schema:
+                $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+  /invoicereconciliation/{country_code}/{party_id}/{id}:
+    parameters:
+    # Correlation headers
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Request-ID
+    - $ref: ./shared/headers.yaml#/components/parameters/X-Correlation-ID
+    # Routing headers
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-from-party-id
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-country-code
+    - $ref: ./shared/headers.yaml#/components/parameters/OCPI-to-party-id
+    # Client-owned object path parameters
+    - $ref: ./shared/parameters.yaml#/components/parameters/country_code
+    - $ref: ./shared/parameters.yaml#/components/parameters/party_id
+    - name: id
+      in: path
+      required: true
+      description: Identifier of the InvoiceReconciliationRecord.
+      schema:
+        type: string
+        maxLength: 36
+    get:
+      operationId: getReceiverInvoiceReconciliationRecord
+      summary: Get Invoice Reconciliation Record (Receiver)
+      description: Retrieve an existing InvoiceReconciliationRecord from the receiver's system.
+      tags:
+      - Invoice Reconciliation - Receiver
+      responses:
+        '200':
+          description: The requested InvoiceReconciliationRecord.
+          headers:
+            # Correlation headers
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceReconciliationRecordResponse'
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
+    put:
+      operationId: putInvoiceReconciliationRecord
+      summary: Update Invoice Reconciliation Record (Receiver)
+      description: Replace an existing InvoiceReconciliationRecord in the receiver's system.
+      tags:
+      - Invoice Reconciliation - Receiver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceReconciliationRecord'
+      responses:
+        '200':
+          description: InvoiceReconciliationRecord updated.
+          headers:
+            # Correlation headers
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+          content:
+            application/json:
+              schema:
+                $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
+    delete:
+      operationId: deleteInvoiceReconciliationRecord
+      summary: Delete Invoice Reconciliation Record (Receiver)
+      description: Delete an existing InvoiceReconciliationRecord from the receiver's system.
+      tags:
+      - Invoice Reconciliation - Receiver
+      responses:
+        '200':
+          description: InvoiceReconciliationRecord deleted.
+          headers:
+            # Correlation headers
+            X-Request-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Request-ID
+            X-Correlation-ID:
+              $ref: ./shared/headers.yaml#/components/headers/X-Correlation-ID
+            # Routing headers
+            OCPI-from-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-country-code
+            OCPI-from-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-from-party-id
+            OCPI-to-country-code:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-country-code
+            OCPI-to-party-id:
+              $ref: ./shared/headers.yaml#/components/headers/OCPI-to-party-id
+          content:
+            application/json:
+              schema:
+                $ref: ./shared/common.yaml#/components/schemas/OcpiResponse
+        '400':
+          $ref: ./shared/common.yaml#/components/responses/OcpiBadRequestResponse
+        '401':
+          $ref: ./shared/common.yaml#/components/responses/OcpiUnauthorizedResponse
+        '404':
+          $ref: ./shared/common.yaml#/components/responses/OcpiNotFoundResponse
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: OCPI credentials token passed as `Token <base64-encoded-credentials-token>` in the Authorization header.
+  schemas:
+    InvoiceReconciliationRecord:
+      type: object
+      description: Associates an invoice with the CDRs covered by that invoice.
+      required:
+      - country_code
+      - party_id
+      - id
+      - invoice_id
+      - cdrs
+      - last_updated
+      properties:
+        country_code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: ISO-3166 alpha-2 country code of the party that owns this record.
+        party_id:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: ID of the party that owns this record.
+        id:
+          type: string
+          maxLength: 36
+          description: Uniquely identifies this InvoiceReconciliationRecord.
+        invoice_id:
+          type: string
+          maxLength: 255
+          description: Identifier of the invoice covered by this record.
+        cdrs:
+          type: array
+          minItems: 1
+          description: Identifiers of the CDRs invoiced by the referenced invoice.
+          items:
+            type: string
+            maxLength: 36
+        last_updated:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
+      additionalProperties: true
+    InvoiceReconciliationRecordResponse:
+      type: object
+      required:
+      - status_code
+      - timestamp
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/InvoiceReconciliationRecord'
+        status_code:
+          type: integer
+          description: OCPI status code.
+          example: 1000
+        status_message:
+          type: string
+          description: An optional status message which may help when debugging.
+        timestamp:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
+      additionalProperties: true
+    InvoiceReconciliationRecordListResponse:
+      type: object
+      required:
+      - status_code
+      - timestamp
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceReconciliationRecord'
+        status_code:
+          type: integer
+          description: OCPI status code.
+          example: 1000
+        status_message:
+          type: string
+          description: An optional status message which may help when debugging.
+        timestamp:
+          $ref: ./shared/schemas/types.yaml#/components/schemas/DateTime
+      additionalProperties: true

@@ -967,7 +967,7 @@ components:
           maxLength: 255
         address:
           type: string
-          maxLength: 45
+          maxLength: 255
         city:
           type: string
           maxLength: 45
@@ -976,7 +976,7 @@ components:
           maxLength: 10
         state:
           type: string
-          maxLength: 20
+          maxLength: 45
         country:
           type: string
           minLength: 3
@@ -1170,7 +1170,7 @@ components:
           description: Display name of the location.
         address:
           type: string
-          maxLength: 45
+          maxLength: 255
           description: Street/block name and house number if available.
         city:
           type: string
@@ -1182,7 +1182,7 @@ components:
           description: Postal code of the location.
         state:
           type: string
-          maxLength: 20
+          maxLength: 45
           description: State or province of the location.
         country:
           type: string

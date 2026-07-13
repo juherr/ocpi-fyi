@@ -203,6 +203,7 @@ components:
         - commands
         - credentials
         - hubclientinfo
+        - invoicereconciliation
         - locations
         - sessions
         - tariffs
@@ -215,12 +216,11 @@ components:
         commands: Commands module
         credentials: Credentials & Registration module (required for all implementations). The `role` field has no function for this module.
         hubclientinfo: Hub Client Info module
+        invoicereconciliation: Invoice Reconciliation module
         locations: Locations module
         sessions: Sessions module
         tariffs: Tariffs module
         tokens: Tokens module
-        bookings: Bookings module
-        payments: Payments module
 
     VersionNumber:
       anyOf:

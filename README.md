@@ -113,6 +113,7 @@ npm run build:search
 ## OpenAPI and API Reference
 
 - OpenAPI sources are stored under `openapi/ocpi-x.y.z`
+- An optional `aggregate.json` in a version directory customizes root metadata and excludes add-on modules from the generated core API
 - Versioned Redoc pages are generated under `public/api/<version>/`
 - OpenAPI diff pages are generated under `public/api/<version>/diff/` (for configured baselines)
 - Versioned Swagger UI pages are generated under `public/api/<version>/swagger/`
