@@ -5,6 +5,7 @@ const { execFileSync } = require("child_process");
 const ROOT_DIR = process.cwd();
 const OPENAPI_ROOT_DIR = path.join(ROOT_DIR, "openapi");
 const PUBLIC_API_DIR = path.join(ROOT_DIR, "public", "api");
+const REDOCLY = path.join(ROOT_DIR, "node_modules", ".bin", "redocly");
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -39,8 +40,8 @@ function runNodeScript(scriptName, args) {
 
 function buildRedoc(version, inputSpecPath, outputHtmlPath) {
   execFileSync(
-    "npx",
-    ["--yes", "@redocly/cli", "build-docs", inputSpecPath, "--output", outputHtmlPath],
+    REDOCLY,
+    ["build-docs", inputSpecPath, "--output", outputHtmlPath],
     { cwd: ROOT_DIR, stdio: "inherit" }
   );
   console.log(`Built Redoc page: public/api/${version}/index.html`);

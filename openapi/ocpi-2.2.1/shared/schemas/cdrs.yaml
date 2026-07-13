@@ -2,6 +2,9 @@ openapi: 3.1.0
 info:
   title: OCPI 2.2.1 - Shared CDR Classes
   version: 2.2.1
+  license:
+    name: Creative Commons Attribution-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nd/4.0/
 
 paths: {}
 

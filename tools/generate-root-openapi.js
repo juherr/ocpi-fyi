@@ -212,8 +212,8 @@ function main() {
   }
 
   console.log("\nNext steps:");
-  console.log(`  npx @redocly/cli lint ${OUTPUT_FILE}`);
-  console.log(`  npx @redocly/cli build-docs ${OUTPUT_FILE} --output dist/redoc/${VERSION}/index.html`);
+  console.log(`  npm exec -- redocly lint ${OUTPUT_FILE}`);
+  console.log(`  npm exec -- redocly build-docs ${OUTPUT_FILE} --output dist/redoc/${VERSION}/index.html`);
 }
 
 main();

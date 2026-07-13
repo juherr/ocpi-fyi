@@ -2,6 +2,10 @@
   "devDependencies": {
     "@antora/cli": "^3.1.14",
     "@antora/site-generator": "^3.1.14",
+    "@openapitools/openapi-generator-cli": "2.39.1",
+    "@pb33f/openapi-changes": "0.2.7",
+    "@redocly/cli": "2.38.0",
+    "@stoplight/spectral-cli": "6.16.1",
     "pagefind": "^1.4.0",
     "swagger-ui-dist": "^5.31.0",
     "yaml": "^2.8.2"
@@ -15,13 +19,17 @@
   },
   "scripts": {
     "generate:antora": "node tools/generate-antora-components.js",
-    "build:antora": "npm run generate:antora && npx antora antora-playbook.yml",
-    "build:search": "node tools/prepare-pagefind.js && npx pagefind --site public --glob \"ocpi/**/*.html\" --force-language en",
+    "build:antora": "npm run generate:antora && npm exec -- antora antora-playbook.yml",
+    "build:search": "node tools/prepare-pagefind.js && npm exec -- pagefind --site public --glob \"ocpi/**/*.html\" --force-language en",
     "build:redoc": "node tools/build-redoc.js",
     "build:openapi-diff": "node tools/build-openapi-diff.js",
     "build:swagger": "node tools/build-swagger-ui.js",
     "build:site": "npm run build:antora && npm run build:redoc && npm run build:openapi-diff && npm run build:swagger && npm run build:search",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:site:worktree": "bash scripts/build_site_worktree.sh",
+    "check:github": "bash scripts/check_github_state.sh",
+    "test": "npm run test:openapi-invariants",
+    "test:openapi-invariants": "node tools/test-openapi-invariants.js",
+    "validate:openapi": "npm run test:openapi-invariants && bash scripts/check_openapi.sh"
   },
   "repository": {
     "type": "git",
