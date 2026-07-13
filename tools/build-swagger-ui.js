@@ -79,6 +79,7 @@ function listOcpiVersionsFromFolders() {
 function bundleOpenApiYaml(inputYamlPath, outputYamlPath) {
   // Use Redocly bundle to preserve named reusable schemas.
   execFileSync(REDOCLY, ["bundle", inputYamlPath, "--output", outputYamlPath], {
+    cwd: ROOT_DIR,
     stdio: "inherit",
   });
 }
