@@ -43,6 +43,9 @@ components:
       enum:
         - AUTH_REQUEST
         - WHITELIST
+      x-enumDescriptions:
+        AUTH_REQUEST: Authentication request from the eMSP
+        WHITELIST: Whitelist used to authenticate, no request done to the eMSP
       description: Method used to authenticate a charging session.
     CdrDimensionType:
       type: string
@@ -53,4 +56,11 @@ components:
         - MIN_CURRENT
         - PARKING_TIME
         - TIME
+      x-enumDescriptions:
+        ENERGY: defined in kWh, default step_size is 1 Wh
+        FLAT: flat fee, no unit
+        MAX_CURRENT: defined in A (Ampere), Maximum current reached during charging session
+        MIN_CURRENT: defined in A (Ampere), Minimum current used during charging session
+        PARKING_TIME: "time not charging: defined in hours, default step_size is 1 second"
+        TIME: "time charging: defined in hours, default step_size is 1 second"
       description: Types of CDR dimensions.

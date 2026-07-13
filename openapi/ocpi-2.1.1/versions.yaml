@@ -167,13 +167,23 @@ components:
             - tariffs
             - tokens
         - type: string
+      x-enumDescriptions:
+        cdrs: CDRs module
+        commands: Commands module
+        credentials: Credentials & Registration module (required for all implementations)
+        locations: Locations module
+        sessions: Sessions module
+        tariffs: Tariffs module
+        tokens: Tokens module
       description: The identifier of an OCPI module.
     VersionNumber:
-      anyOf:
-        - type: string
-          enum:
-            - "2.0"
-            - "2.1"
-            - "2.1.1"
-        - type: string
+      type: string
+      enum:
+        - "2.0"
+        - "2.1"
+        - "2.1.1"
+      x-enumDescriptions:
+        "2.0": OCPI version 2.0.
+        "2.1": OCPI version 2.1. (DEPRECATED, do not use, use 2.1.1 instead)
+        "2.1.1": OCPI version 2.1.1. (this version)
       description: List of known OCPI version numbers.

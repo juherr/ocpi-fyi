@@ -406,13 +406,17 @@ components:
       example:
         result: ACCEPTED
     CommandResponseType:
-      anyOf:
-        - type: string
-          enum:
-            - NOT_SUPPORTED
-            - REJECTED
-            - ACCEPTED
-            - TIMEOUT
-            - UNKNOWN_SESSION
-        - type: string
+      type: string
+      enum:
+        - NOT_SUPPORTED
+        - REJECTED
+        - ACCEPTED
+        - TIMEOUT
+        - UNKNOWN_SESSION
+      x-enumDescriptions:
+        NOT_SUPPORTED: The requested command is not supported by this CPO, Charge Point, EVSE etc.
+        REJECTED: Command request rejected by the CPO or Charge Point.
+        ACCEPTED: Command request accepted by the CPO or Charge Point.
+        TIMEOUT: Command request timeout, no response received from the Charge Point in an reasonable time.
+        UNKNOWN_SESSION: The Session in the requested command is not known by this CPO.
       description: Result of the command request.

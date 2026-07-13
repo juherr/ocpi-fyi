@@ -1007,55 +1007,97 @@ components:
         - REMOVED
         - RESERVED
         - UNKNOWN
+      x-enumDescriptions:
+        AVAILABLE: The EVSE/Connector is able to start a new charging session.
+        BLOCKED: The EVSE/Connector is not accessible because of a physical barrier, i.e. a car.
+        CHARGING: The EVSE/Connector is in use.
+        INOPERATIVE: The EVSE/Connector is not yet active or it is no longer available (deleted).
+        OUTOFORDER: The EVSE/Connector is currently out of order.
+        PLANNED: The EVSE/Connector is planned, will be operating soon
+        REMOVED: The EVSE/Connector/charge point is discontinued/removed.
+        RESERVED: The EVSE/Connector is reserved for a particular EV driver and is unavailable for other drivers.
+        UNKNOWN: No status information available. (Also used when offline)
       description: The status of an EVSE.
     Capability:
-      anyOf:
-        - type: string
-          enum:
-            - CHARGING_PROFILE_CAPABLE
-            - CREDIT_CARD_PAYABLE
-            - REMOTE_START_STOP_CAPABLE
-            - RESERVABLE
-            - RFID_READER
-            - UNLOCK_CAPABLE
-        - type: string
+      type: string
+      enum:
+        - CHARGING_PROFILE_CAPABLE
+        - CREDIT_CARD_PAYABLE
+        - REMOTE_START_STOP_CAPABLE
+        - RESERVABLE
+        - RFID_READER
+        - UNLOCK_CAPABLE
+      x-enumDescriptions:
+        CHARGING_PROFILE_CAPABLE: The EVSE supports charging profiles. Sending Charging Profiles is not yet supported by OCPI.
+        CREDIT_CARD_PAYABLE: Charging at this EVSE can be payed with credit card.
+        REMOTE_START_STOP_CAPABLE: The EVSE can remotely be started/stopped.
+        RESERVABLE: The EVSE can be reserved.
+        RFID_READER: Charging at this EVSE can be authorized with a RFID token
+        UNLOCK_CAPABLE: Connectors have mechanical lock that can be requested by the eMSP to be unlocked.
       description: The capabilities of an EVSE.
     ConnectorFormat:
       type: string
       enum:
         - SOCKET
         - CABLE
+      x-enumDescriptions:
+        SOCKET: The connector is a socket; the EV user needs to bring a fitting plug.
+        CABLE: The connector is an attached cable; the EV users car needs to have a fitting inlet.
       description: The format of a connector (socket or attached cable).
     ConnectorType:
-      anyOf:
-        - type: string
-          enum:
-            - CHADEMO
-            - DOMESTIC_A
-            - DOMESTIC_B
-            - DOMESTIC_C
-            - DOMESTIC_D
-            - DOMESTIC_E
-            - DOMESTIC_F
-            - DOMESTIC_G
-            - DOMESTIC_H
-            - DOMESTIC_I
-            - DOMESTIC_J
-            - DOMESTIC_K
-            - DOMESTIC_L
-            - IEC_60309_2_single_16
-            - IEC_60309_2_three_16
-            - IEC_60309_2_three_32
-            - IEC_60309_2_three_64
-            - IEC_62196_T1
-            - IEC_62196_T1_COMBO
-            - IEC_62196_T2
-            - IEC_62196_T2_COMBO
-            - IEC_62196_T3A
-            - IEC_62196_T3C
-            - TESLA_R
-            - TESLA_S
-        - type: string
+      type: string
+      enum:
+        - CHADEMO
+        - DOMESTIC_A
+        - DOMESTIC_B
+        - DOMESTIC_C
+        - DOMESTIC_D
+        - DOMESTIC_E
+        - DOMESTIC_F
+        - DOMESTIC_G
+        - DOMESTIC_H
+        - DOMESTIC_I
+        - DOMESTIC_J
+        - DOMESTIC_K
+        - DOMESTIC_L
+        - IEC_60309_2_single_16
+        - IEC_60309_2_three_16
+        - IEC_60309_2_three_32
+        - IEC_60309_2_three_64
+        - IEC_62196_T1
+        - IEC_62196_T1_COMBO
+        - IEC_62196_T2
+        - IEC_62196_T2_COMBO
+        - IEC_62196_T3A
+        - IEC_62196_T3C
+        - TESLA_R
+        - TESLA_S
+      x-enumDescriptions:
+        CHADEMO: The connector type is CHAdeMO, DC
+        DOMESTIC_A: Standard/Domestic household, type "A", NEMA 1-15, 2 pins
+        DOMESTIC_B: Standard/Domestic household, type "B", NEMA 5-15, 3 pins
+        DOMESTIC_C: Standard/Domestic household, type "C", CEE 7/17, 2 pins
+        DOMESTIC_D: Standard/Domestic household, type "D", 3 pin
+        DOMESTIC_E: Standard/Domestic household, type "E", CEE 7/5 3 pins
+        DOMESTIC_F: Standard/Domestic household, type "F", CEE 7/4, Schuko, 3 pins
+        DOMESTIC_G: Standard/Domestic household, type "G", BS 1363, Commonwealth, 3 pins
+        DOMESTIC_H: Standard/Domestic household, type "H", SI-32, 3 pins
+        DOMESTIC_I: Standard/Domestic household, type "I", AS 3112, 3 pins
+        DOMESTIC_J: Standard/Domestic household, type "J", SEV 1011, 3 pins
+        DOMESTIC_K: Standard/Domestic household, type "K", DS 60884-2-D1, 3 pins
+        DOMESTIC_L: Standard/Domestic household, type "L", CEI 23-16-VII, 3 pins
+        IEC_60309_2_single_16: IEC 60309-2 Industrial Connector single phase 16 Amperes (usually blue)
+        IEC_60309_2_three_16: IEC 60309-2 Industrial Connector three phase 16 Amperes (usually red)
+        IEC_60309_2_three_32: IEC 60309-2 Industrial Connector three phase 32 Amperes (usually red)
+        IEC_60309_2_three_64: IEC 60309-2 Industrial Connector three phase 64 Amperes (usually red)
+        IEC_62196_T1: IEC 62196 Type 1 "SAE J1772"
+        IEC_62196_T1_COMBO: Combo Type 1 based, DC
+        IEC_62196_T2: IEC 62196 Type 2 "Mennekes"
+        IEC_62196_T2_COMBO: Combo Type 2 based, DC
+        IEC_62196_T3A: IEC 62196 Type 3A
+        IEC_62196_T3C: IEC 62196 Type 3C "Scame"
+        TESLA_R: Tesla Connector "Roadster"-type (round, 4 pin)
+        TESLA_S: Tesla Connector "Model-S"-type (oval, 5 pin)
       description: The socket or plug standard of the connector.
     PowerType:
       type: string
@@ -1063,6 +1105,10 @@ components:
         - AC_1_PHASE
         - AC_3_PHASE
         - DC
+      x-enumDescriptions:
+        AC_1_PHASE: AC mono phase.
+        AC_3_PHASE: AC 3 phase.
+        DC: Direct Current.
       description: AC or DC power type.
     LocationType:
       type: string
@@ -1073,37 +1119,63 @@ components:
         - PARKING_LOT
         - OTHER
         - UNKNOWN
+      x-enumDescriptions:
+        ON_STREET: Parking in public space.
+        PARKING_GARAGE: Multistorey car park.
+        UNDERGROUND_GARAGE: Multistorey car park, mainly underground.
+        PARKING_LOT: A cleared area that is intended for parking vehicles, i.e. at super markets, bars, etc.
+        OTHER: None of the given possibilities.
+        UNKNOWN: Parking location type is not known by the operator (default).
       description: Reflects the general type of the charge point's location.
     ParkingRestriction:
-      anyOf:
-        - type: string
-          enum:
-            - CUSTOMERS
-            - DISABLED
-            - EV_ONLY
-            - MOTORCYCLES
-            - PLUGGED
-        - type: string
+      type: string
+      enum:
+        - CUSTOMERS
+        - DISABLED
+        - EV_ONLY
+        - MOTORCYCLES
+        - PLUGGED
+      x-enumDescriptions:
+        CUSTOMERS: Parking spot for customers/guests only, for example in case of a hotel or shop.
+        DISABLED: Reserved parking spot for disabled people with valid ID.
+        EV_ONLY: Reserved parking spot for electric vehicles.
+        MOTORCYCLES: Parking spot only suitable for (electric) motorcycles or scooters.
+        PLUGGED: Parking is only allowed while plugged in (charging).
       description: Restrictions for using a parking spot.
     Facility:
-      anyOf:
-        - type: string
-          enum:
-            - HOTEL
-            - RESTAURANT
-            - CAFE
-            - MALL
-            - SUPERMARKET
-            - SPORT
-            - RECREATION_AREA
-            - NATURE
-            - MUSEUM
-            - BUS_STOP
-            - TAXI_STAND
-            - TRAIN_STATION
-            - AIRPORT
-            - CARPOOL_PARKING
-            - FUEL_STATION
-            - WIFI
-        - type: string
+      type: string
+      enum:
+        - HOTEL
+        - RESTAURANT
+        - CAFE
+        - MALL
+        - SUPERMARKET
+        - SPORT
+        - RECREATION_AREA
+        - NATURE
+        - MUSEUM
+        - BUS_STOP
+        - TAXI_STAND
+        - TRAIN_STATION
+        - AIRPORT
+        - CARPOOL_PARKING
+        - FUEL_STATION
+        - WIFI
+      x-enumDescriptions:
+        HOTEL: A hotel.
+        RESTAURANT: A restaurant.
+        CAFE: A cafe.
+        MALL: A mall or shopping center.
+        SUPERMARKET: A supermarket.
+        SPORT: "Sport facilities: gym, field etc."
+        RECREATION_AREA: A Recreation area.
+        NATURE: Located in, or close to, a park, nature reserve/park etc.
+        MUSEUM: A museum.
+        BUS_STOP: A bus stop.
+        TAXI_STAND: A taxi stand.
+        TRAIN_STATION: A train station.
+        AIRPORT: An airport.
+        CARPOOL_PARKING: A carpool parking.
+        FUEL_STATION: A Fuel station.
+        WIFI: Wifi or other type of internet available.
       description: Facilities at or near the charging location.

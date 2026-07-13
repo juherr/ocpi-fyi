@@ -211,17 +211,23 @@ components:
           description: Amount of this environmental impact in g/kWh.
       additionalProperties: true
     ImageCategory:
-      anyOf:
-        - type: string
-          enum:
-            - CHARGER
-            - ENTRANCE
-            - LOCATION
-            - NETWORK
-            - OPERATOR
-            - OTHER
-            - OWNER
-        - type: string
+      type: string
+      enum:
+        - CHARGER
+        - ENTRANCE
+        - LOCATION
+        - NETWORK
+        - OPERATOR
+        - OTHER
+        - OWNER
+      x-enumDescriptions:
+        CHARGER: Photo of the physical device that contains one or more EVSEs.
+        ENTRANCE: Location entrance photo. Should show the car entrance to the location from street side.
+        LOCATION: Location overview photo.
+        NETWORK: Logo of an associated roaming network to be displayed with the EVSE for example in lists, maps and detailed information view.
+        OPERATOR: Logo of the charge points operator, for example a municipality, to be displayed with the EVSEs detailed information view or in lists and maps, if no networkLogo is present.
+        OTHER: Other
+        OWNER: Logo of the charge points owner, for example a local store, to be displayed with the EVSEs detailed information view.
       description: The category of an image to obtain the correct usage.
     EnergySourceCategory:
       type: string
@@ -234,12 +240,22 @@ components:
         - SOLAR
         - WIND
         - WATER
+      x-enumDescriptions:
+        NUCLEAR: Nuclear power sources.
+        GENERAL_FOSSIL: All kinds of fossil power sources.
+        COAL: Fossil power from coal.
+        GAS: Fossil power from gas.
+        GENERAL_GREEN: All kinds of regenerative power sources.
+        SOLAR: Regenerative power from PV.
+        WIND: Regenerative power from wind turbines.
+        WATER: Regenerative power from water turbines.
       description: Categories of energy sources.
     EnvironmentalImpactCategory:
-      anyOf:
-        - type: string
-          enum:
-            - NUCLEAR_WASTE
-            - CARBON_DIOXIDE
-        - type: string
+      type: string
+      enum:
+        - NUCLEAR_WASTE
+        - CARBON_DIOXIDE
+      x-enumDescriptions:
+        NUCLEAR_WASTE: Produced nuclear waste in grams per kilowatthour.
+        CARBON_DIOXIDE: Exhausted carbon dioxide in grams per kilowatthour.
       description: Categories of environmental impact values.
